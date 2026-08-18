@@ -18,6 +18,7 @@
 		8F07E090C9D54A59A1FA5941 /* DrivingTrainerDomain in Frameworks */ = {isa = PBXBuildFile; productRef = A972F52BC788063EBAB3C933 /* DrivingTrainerDomain */; };
 		AA8A7A649E4BDB3E4410347D /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276E7791B144E995FFCCC373 /* RootTabView.swift */; };
 		DB470FF2D3235F0069D5635D /* RoutesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CD26AADE1F8CAF808235614 /* RoutesView.swift */; };
+		E364BF0C6612C2AB7B831F61 /* WatchBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97B5EF2F0FAE93CA3C5304E /* WatchBridge.swift */; };
 		F6BA9E8BEE6A0A45B560C326 /* DrivingTrainerWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 6BA62B0A20D976D3B97E77BD /* DrivingTrainerWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F9B6B30EAB67C8208FAAA5C2 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97FE2664E70A928B79DCC7C /* AppModel.swift */; };
 /* End PBXBuildFile section */
@@ -53,6 +54,7 @@
 		6BA62B0A20D976D3B97E77BD /* DrivingTrainerWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DrivingTrainerWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79C3A78B6EB73BFACBB4037C /* RecordsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordsView.swift; sourceTree = "<group>"; };
 		8CD26AADE1F8CAF808235614 /* RoutesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesView.swift; sourceTree = "<group>"; };
+		A97B5EF2F0FAE93CA3C5304E /* WatchBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchBridge.swift; sourceTree = "<group>"; };
 		BA9F270D267D3653F3375823 /* RecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingView.swift; sourceTree = "<group>"; };
 		C45390523D80921D61909D8B /* DrivingTrainerWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrivingTrainerWatchApp.swift; sourceTree = "<group>"; };
 		E97FE2664E70A928B79DCC7C /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 				276E7791B144E995FFCCC373 /* RootTabView.swift */,
 				8CD26AADE1F8CAF808235614 /* RoutesView.swift */,
 				F2411DD0C6DBBA3B75D85F09 /* TrainingHomeView.swift */,
+				A97B5EF2F0FAE93CA3C5304E /* WatchBridge.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -262,6 +265,7 @@
 				AA8A7A649E4BDB3E4410347D /* RootTabView.swift in Sources */,
 				DB470FF2D3235F0069D5635D /* RoutesView.swift in Sources */,
 				1A57F5874C03E997E4F70660 /* TrainingHomeView.swift in Sources */,
+				E364BF0C6612C2AB7B831F61 /* WatchBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

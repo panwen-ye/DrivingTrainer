@@ -10,6 +10,8 @@ struct RecordingView: View {
     @StateObject private var recorder = LocationRecorder()
     @State private var routeName = "新路线"
     @State private var isSaving = false
+    @State private var nodes: [RouteNode] = []
+    @State private var editingNode: RouteNode?
 
     var body: some View {
         VStack(spacing: 0) {
@@ -20,6 +22,12 @@ struct RecordingView: View {
         .navigationBarTitleDisplayMode(.inline)
         .interactiveDismissDisabled(recorder.state != .idle)
         .onAppear { recorder.requestAuthorization() }
+        .sheet(item: $editingNode) { node in
+            NodeEditorView(node: node) { updated in
+                guard let index = nodes.firstIndex(where: { $0.id == updated.id }) else { return }
+                nodes[index] = updated
+            }
+        }
     }
 
     private var map: some View {
@@ -52,7 +60,13 @@ struct RecordingView: View {
                 Divider().frame(height: 36)
                 metric(title: "轨迹点", value: "\(recorder.track.count)")
                 Divider().frame(height: 36)
-                metric(title: "GPS", value: accuracyText)
+                metric(title: "节点", value: "\(nodes.count)")
+            }
+
+            if recorder.state != .idle {
+                Button("标记考试节点", systemImage: "mappin.and.ellipse") { addNode() }
+                    .buttonStyle(.bordered)
+                    .disabled(recorder.latestPoint == nil)
             }
 
             switch recorder.state {
@@ -150,12 +164,86 @@ struct RecordingView: View {
         let route = Route(
             name: routeName,
             venue: "武汉同心考场",
-            path: track
+            path: track,
+            nodes: nodes
         )
         Task {
             await model.saveRoute(route)
             isSaving = false
             dismiss()
+        }
+    }
+
+    private func addNode() {
+        guard let point = recorder.latestPoint else { return }
+        let node = RouteNode(
+            coordinate: point.coordinate,
+            order: nodes.count,
+            type: .custom,
+            instruction: "前方考试节点"
+        )
+        nodes.append(node)
+        editingNode = node
+    }
+}
+
+struct NodeEditorView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var node: RouteNode
+    let onSave: (RouteNode) -> Void
+
+    init(node: RouteNode, onSave: @escaping (RouteNode) -> Void) {
+        _node = State(initialValue: node)
+        self.onSave = onSave
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Picker("节点类型", selection: $node.type) {
+                    ForEach(NodeType.allCases, id: \.self) { type in
+                        Text(type.title).tag(type)
+                    }
+                }
+                TextField("语音提醒内容", text: $node.instruction, axis: .vertical)
+                Stepper(value: $node.reminderRadiusMeters, in: 40...300, step: 20) {
+                    LabeledContent("提醒距离", value: "\(Int(node.reminderRadiusMeters)) 米")
+                }
+            }
+            .navigationTitle("编辑节点")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("取消") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("保存") {
+                        onSave(node)
+                        dismiss()
+                    }
+                    .disabled(node.instruction.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
+            }
+        }
+    }
+}
+
+extension NodeType {
+    var title: String {
+        switch self {
+        case .start: "起步"
+        case .trafficLight: "路口/信号灯"
+        case .turnLeft: "左转"
+        case .turnRight: "右转"
+        case .laneChange: "变更车道"
+        case .overtake: "超车"
+        case .school: "学校区域"
+        case .busStop: "公交站"
+        case .meeting: "会车"
+        case .straightDriving: "直线行驶"
+        case .speedControl: "加减挡"
+        case .uTurn: "掉头"
+        case .pullOver: "靠边停车"
+        case .custom: "自定义"
         }
     }
 }

@@ -1,6 +1,6 @@
 # 驾考路线智能训练 APP
 
-面向 iPhone + Apple Watch 的科目三个人训练工具。本 workspace 当前仅完成前期规划与目录骨架，不包含业务代码。
+面向 iPhone + Apple Watch 的科目三个人训练工具。项目已进入 MVP 开发，核心业务模块、iPhone 工程、路线录制和训练闭环均已落地。
 
 ## 当前产品定位
 
@@ -57,6 +57,9 @@ DrivingTrainer/
 - 服务端：无；首版完全本地运行。
 - 第三方依赖：默认 0 个。
 
-## 下一道开工门槛
+## 当前验证状态
 
-进入编码前，应确认：Apple Developer 登录方式、iPhone/iOS 与 Watch/watchOS 版本、三条路线的坐标数据来源，以及真车训练时的安全交互原则。后台持续录制若影响两周交付，可在 MVP 中降级为前台录制。
+- 纯 Swift 核心模块可通过命令行构建。
+- Xcode 工程可由 `xcodegen generate` 稳定生成。
+- iPhone/watchOS 编译、签名和真机安装需等待本机 Xcode 完成 App Store 授权安装。
+- 三条同心考场路线先通过 App 实地录制，不依赖未经确认的网络路线数据。

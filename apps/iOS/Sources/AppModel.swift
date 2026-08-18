@@ -8,6 +8,7 @@ final class AppModel: ObservableObject {
     @Published private(set) var routes: [Route] = []
     @Published private(set) var sessions: [PracticeSession] = []
     @Published var errorMessage: String?
+    let watchBridge = WatchBridge()
 
     private var store: DrivingDataStore?
 
@@ -58,6 +59,10 @@ final class AppModel: ObservableObject {
         } catch {
             errorMessage = "保存路线失败：\(error.localizedDescription)"
         }
+    }
+
+    func updateWatch(route: String, instruction: String, alert: Bool = false) {
+        watchBridge.update(route: route, instruction: instruction, shouldAlert: alert)
     }
 
     private static let initialRoutes: [Route] = [
