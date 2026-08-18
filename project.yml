@@ -30,6 +30,8 @@ targets:
         product: DrivingTrainerDomain
       - package: DrivingTrainerCore
         product: DrivingTrainerPersistence
+      - package: DrivingTrainerCore
+        product: DrivingTrainerLocationKit
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.panwenye.DrivingTrainer

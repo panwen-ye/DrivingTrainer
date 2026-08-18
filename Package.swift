@@ -11,7 +11,8 @@ let package = Package(
     ],
     products: [
         .library(name: "DrivingTrainerDomain", targets: ["DrivingTrainerDomain"]),
-        .library(name: "DrivingTrainerPersistence", targets: ["DrivingTrainerPersistence"])
+        .library(name: "DrivingTrainerPersistence", targets: ["DrivingTrainerPersistence"]),
+        .library(name: "DrivingTrainerLocationKit", targets: ["DrivingTrainerLocationKit"])
     ],
     targets: [
         .target(
@@ -22,6 +23,11 @@ let package = Package(
             name: "DrivingTrainerPersistence",
             dependencies: ["DrivingTrainerDomain"],
             path: "packages/Persistence/Sources"
+        ),
+        .target(
+            name: "DrivingTrainerLocationKit",
+            dependencies: ["DrivingTrainerDomain"],
+            path: "packages/LocationKit/Sources"
         ),
         .testTarget(
             name: "DrivingTrainerDomainTests",

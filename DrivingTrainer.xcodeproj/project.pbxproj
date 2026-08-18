@@ -10,7 +10,9 @@
 		1A57F5874C03E997E4F70660 /* TrainingHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2411DD0C6DBBA3B75D85F09 /* TrainingHomeView.swift */; };
 		21260C5E331175D046A62EDF /* DrivingTrainerDomain in Frameworks */ = {isa = PBXBuildFile; productRef = 1978B0D3C6E7CF7155FC8DFE /* DrivingTrainerDomain */; };
 		339C82C0369742A1CE0575C0 /* DrivingTrainerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED137EADE864C912B81DBD2F /* DrivingTrainerApp.swift */; };
+		4201CC8B9113AA6FAF2A0240 /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9F270D267D3653F3375823 /* RecordingView.swift */; };
 		4692D5DAFFDE448D71390F08 /* DrivingTrainerWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C45390523D80921D61909D8B /* DrivingTrainerWatchApp.swift */; };
+		482E319F834C0B02A05D383F /* DrivingTrainerLocationKit in Frameworks */ = {isa = PBXBuildFile; productRef = 40EEC8930FA11D0448A00AE1 /* DrivingTrainerLocationKit */; };
 		6492FE423EA031F1DF568650 /* DrivingTrainerPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = 4A6ED221EF3F6985E7726371 /* DrivingTrainerPersistence */; };
 		7AB4BA42B8A1AC1991F36F10 /* RecordsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C3A78B6EB73BFACBB4037C /* RecordsView.swift */; };
 		8F07E090C9D54A59A1FA5941 /* DrivingTrainerDomain in Frameworks */ = {isa = PBXBuildFile; productRef = A972F52BC788063EBAB3C933 /* DrivingTrainerDomain */; };
@@ -51,6 +53,7 @@
 		6BA62B0A20D976D3B97E77BD /* DrivingTrainerWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DrivingTrainerWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79C3A78B6EB73BFACBB4037C /* RecordsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordsView.swift; sourceTree = "<group>"; };
 		8CD26AADE1F8CAF808235614 /* RoutesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesView.swift; sourceTree = "<group>"; };
+		BA9F270D267D3653F3375823 /* RecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingView.swift; sourceTree = "<group>"; };
 		C45390523D80921D61909D8B /* DrivingTrainerWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrivingTrainerWatchApp.swift; sourceTree = "<group>"; };
 		E97FE2664E70A928B79DCC7C /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		ED137EADE864C912B81DBD2F /* DrivingTrainerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrivingTrainerApp.swift; sourceTree = "<group>"; };
@@ -72,6 +75,7 @@
 			files = (
 				8F07E090C9D54A59A1FA5941 /* DrivingTrainerDomain in Frameworks */,
 				6492FE423EA031F1DF568650 /* DrivingTrainerPersistence in Frameworks */,
+				482E319F834C0B02A05D383F /* DrivingTrainerLocationKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -92,6 +96,7 @@
 			children = (
 				E97FE2664E70A928B79DCC7C /* AppModel.swift */,
 				ED137EADE864C912B81DBD2F /* DrivingTrainerApp.swift */,
+				BA9F270D267D3653F3375823 /* RecordingView.swift */,
 				79C3A78B6EB73BFACBB4037C /* RecordsView.swift */,
 				276E7791B144E995FFCCC373 /* RootTabView.swift */,
 				8CD26AADE1F8CAF808235614 /* RoutesView.swift */,
@@ -189,6 +194,7 @@
 			packageProductDependencies = (
 				A972F52BC788063EBAB3C933 /* DrivingTrainerDomain */,
 				4A6ED221EF3F6985E7726371 /* DrivingTrainerPersistence */,
+				40EEC8930FA11D0448A00AE1 /* DrivingTrainerLocationKit */,
 			);
 			productName = DrivingTrainerApp;
 			productReference = 49B73DB7B8C4DBFEDE91118E /* DrivingTrainerApp.app */;
@@ -251,6 +257,7 @@
 			files = (
 				F9B6B30EAB67C8208FAAA5C2 /* AppModel.swift in Sources */,
 				339C82C0369742A1CE0575C0 /* DrivingTrainerApp.swift in Sources */,
+				4201CC8B9113AA6FAF2A0240 /* RecordingView.swift in Sources */,
 				7AB4BA42B8A1AC1991F36F10 /* RecordsView.swift in Sources */,
 				AA8A7A649E4BDB3E4410347D /* RootTabView.swift in Sources */,
 				DB470FF2D3235F0069D5635D /* RoutesView.swift in Sources */,
@@ -507,6 +514,10 @@
 		1978B0D3C6E7CF7155FC8DFE /* DrivingTrainerDomain */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DrivingTrainerDomain;
+		};
+		40EEC8930FA11D0448A00AE1 /* DrivingTrainerLocationKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DrivingTrainerLocationKit;
 		};
 		4A6ED221EF3F6985E7726371 /* DrivingTrainerPersistence */ = {
 			isa = XCSwiftPackageProductDependency;

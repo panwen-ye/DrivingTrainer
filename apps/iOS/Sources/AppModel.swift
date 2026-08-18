@@ -50,6 +50,16 @@ final class AppModel: ObservableObject {
         }
     }
 
+    func saveRoute(_ route: Route) async {
+        guard let store else { return }
+        do {
+            try await store.upsertRoute(route)
+            routes = try await store.routes()
+        } catch {
+            errorMessage = "保存路线失败：\(error.localizedDescription)"
+        }
+    }
+
     private static let initialRoutes: [Route] = [
         Route(name: "1号线", venue: "武汉同心考场"),
         Route(name: "3号线", venue: "武汉同心考场"),

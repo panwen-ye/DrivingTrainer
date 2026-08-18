@@ -31,7 +31,11 @@ struct RoutesView: View {
         .listStyle(.plain)
         .navigationTitle("我的路线")
         .toolbar {
-            Button("录制", systemImage: "record.circle") {}
+            NavigationLink {
+                RecordingView()
+            } label: {
+                Label("录制", systemImage: "record.circle")
+            }
         }
     }
 }
