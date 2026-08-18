@@ -1,0 +1,10 @@
+.build/
+.swiftpm/
+DerivedData/
+.DS_Store
+*.xcuserstate
+xcuserdata/
+
+# Local signing and private training data
+*.mobileprovision
+LocalTrainingData/
