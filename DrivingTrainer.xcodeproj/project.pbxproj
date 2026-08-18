@@ -1,0 +1,522 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1A57F5874C03E997E4F70660 /* TrainingHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2411DD0C6DBBA3B75D85F09 /* TrainingHomeView.swift */; };
+		21260C5E331175D046A62EDF /* DrivingTrainerDomain in Frameworks */ = {isa = PBXBuildFile; productRef = 1978B0D3C6E7CF7155FC8DFE /* DrivingTrainerDomain */; };
+		339C82C0369742A1CE0575C0 /* DrivingTrainerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED137EADE864C912B81DBD2F /* DrivingTrainerApp.swift */; };
+		4692D5DAFFDE448D71390F08 /* DrivingTrainerWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C45390523D80921D61909D8B /* DrivingTrainerWatchApp.swift */; };
+		6492FE423EA031F1DF568650 /* DrivingTrainerPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = 4A6ED221EF3F6985E7726371 /* DrivingTrainerPersistence */; };
+		7AB4BA42B8A1AC1991F36F10 /* RecordsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C3A78B6EB73BFACBB4037C /* RecordsView.swift */; };
+		8F07E090C9D54A59A1FA5941 /* DrivingTrainerDomain in Frameworks */ = {isa = PBXBuildFile; productRef = A972F52BC788063EBAB3C933 /* DrivingTrainerDomain */; };
+		AA8A7A649E4BDB3E4410347D /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276E7791B144E995FFCCC373 /* RootTabView.swift */; };
+		DB470FF2D3235F0069D5635D /* RoutesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CD26AADE1F8CAF808235614 /* RoutesView.swift */; };
+		F6BA9E8BEE6A0A45B560C326 /* DrivingTrainerWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 6BA62B0A20D976D3B97E77BD /* DrivingTrainerWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F9B6B30EAB67C8208FAAA5C2 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97FE2664E70A928B79DCC7C /* AppModel.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		702810A18B432929EB6A6B0C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 14C53AD50AA42C3BC7F4DF91 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1B840D71A2FD8ACDA1A1B827;
+			remoteInfo = DrivingTrainerWatch;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		AC84E60EEDFF0522C05FBCEE /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				F6BA9E8BEE6A0A45B560C326 /* DrivingTrainerWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		276E7791B144E995FFCCC373 /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
+		49B73DB7B8C4DBFEDE91118E /* DrivingTrainerApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = DrivingTrainerApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		62A243918302650B672AE424 /* DrivingTrainer */ = {isa = PBXFileReference; lastKnownFileType = folder; name = DrivingTrainer; path = .; sourceTree = SOURCE_ROOT; };
+		6BA62B0A20D976D3B97E77BD /* DrivingTrainerWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DrivingTrainerWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		79C3A78B6EB73BFACBB4037C /* RecordsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordsView.swift; sourceTree = "<group>"; };
+		8CD26AADE1F8CAF808235614 /* RoutesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesView.swift; sourceTree = "<group>"; };
+		C45390523D80921D61909D8B /* DrivingTrainerWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrivingTrainerWatchApp.swift; sourceTree = "<group>"; };
+		E97FE2664E70A928B79DCC7C /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		ED137EADE864C912B81DBD2F /* DrivingTrainerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrivingTrainerApp.swift; sourceTree = "<group>"; };
+		F2411DD0C6DBBA3B75D85F09 /* TrainingHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingHomeView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		106AB8521538EAE522EF2D42 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21260C5E331175D046A62EDF /* DrivingTrainerDomain in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CC839557381DF349C08889EE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8F07E090C9D54A59A1FA5941 /* DrivingTrainerDomain in Frameworks */,
+				6492FE423EA031F1DF568650 /* DrivingTrainerPersistence in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		040C5E97D2631C5E57B09688 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				49B73DB7B8C4DBFEDE91118E /* DrivingTrainerApp.app */,
+				6BA62B0A20D976D3B97E77BD /* DrivingTrainerWatch.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		194F173173BE32FC911B2D95 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				E97FE2664E70A928B79DCC7C /* AppModel.swift */,
+				ED137EADE864C912B81DBD2F /* DrivingTrainerApp.swift */,
+				79C3A78B6EB73BFACBB4037C /* RecordsView.swift */,
+				276E7791B144E995FFCCC373 /* RootTabView.swift */,
+				8CD26AADE1F8CAF808235614 /* RoutesView.swift */,
+				F2411DD0C6DBBA3B75D85F09 /* TrainingHomeView.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		2DD38E37108E7799687DC7DF /* apps */ = {
+			isa = PBXGroup;
+			children = (
+				EE2B4DEA1BFBA7247B635D95 /* iOS */,
+				CB3FF671F8753EC77344A2F9 /* watchOS */,
+			);
+			path = apps;
+			sourceTree = "<group>";
+		};
+		894209CC6D81C9DCE48C1208 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				C45390523D80921D61909D8B /* DrivingTrainerWatchApp.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		CB3FF671F8753EC77344A2F9 /* watchOS */ = {
+			isa = PBXGroup;
+			children = (
+				894209CC6D81C9DCE48C1208 /* Sources */,
+			);
+			path = watchOS;
+			sourceTree = "<group>";
+		};
+		EE2B4DEA1BFBA7247B635D95 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				194F173173BE32FC911B2D95 /* Sources */,
+			);
+			path = iOS;
+			sourceTree = "<group>";
+		};
+		F79A177DA616F238AEBC3A54 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				62A243918302650B672AE424 /* DrivingTrainer */,
+			);
+			path = Packages;
+			sourceTree = "<group>";
+		};
+		FF39FDDE48D65EEDFC6D0704 = {
+			isa = PBXGroup;
+			children = (
+				2DD38E37108E7799687DC7DF /* apps */,
+				F79A177DA616F238AEBC3A54 /* Packages */,
+				040C5E97D2631C5E57B09688 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1B840D71A2FD8ACDA1A1B827 /* DrivingTrainerWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B0E9C709E7170D17A616CF3E /* Build configuration list for PBXNativeTarget "DrivingTrainerWatch" */;
+			buildPhases = (
+				1C7BD3CE2903A8526CB38B0B /* Sources */,
+				106AB8521538EAE522EF2D42 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DrivingTrainerWatch;
+			packageProductDependencies = (
+				1978B0D3C6E7CF7155FC8DFE /* DrivingTrainerDomain */,
+			);
+			productName = DrivingTrainerWatch;
+			productReference = 6BA62B0A20D976D3B97E77BD /* DrivingTrainerWatch.app */;
+			productType = "com.apple.product-type.application";
+		};
+		BE59FDBD0AAF8E5DAD908991 /* DrivingTrainerApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ECA4EE8ECACB95402B112B72 /* Build configuration list for PBXNativeTarget "DrivingTrainerApp" */;
+			buildPhases = (
+				F16F042E622D457DCE60512C /* Sources */,
+				CC839557381DF349C08889EE /* Frameworks */,
+				AC84E60EEDFF0522C05FBCEE /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1D0EAADB4FDE604F5BD5EFEA /* PBXTargetDependency */,
+			);
+			name = DrivingTrainerApp;
+			packageProductDependencies = (
+				A972F52BC788063EBAB3C933 /* DrivingTrainerDomain */,
+				4A6ED221EF3F6985E7726371 /* DrivingTrainerPersistence */,
+			);
+			productName = DrivingTrainerApp;
+			productReference = 49B73DB7B8C4DBFEDE91118E /* DrivingTrainerApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		14C53AD50AA42C3BC7F4DF91 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					1B840D71A2FD8ACDA1A1B827 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					BE59FDBD0AAF8E5DAD908991 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 248601C4EF0E338DDA0C598F /* Build configuration list for PBXProject "DrivingTrainer" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = FF39FDDE48D65EEDFC6D0704;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				87A0BEEFAB4309B8F48D2574 /* XCLocalSwiftPackageReference "." */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 040C5E97D2631C5E57B09688 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BE59FDBD0AAF8E5DAD908991 /* DrivingTrainerApp */,
+				1B840D71A2FD8ACDA1A1B827 /* DrivingTrainerWatch */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1C7BD3CE2903A8526CB38B0B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4692D5DAFFDE448D71390F08 /* DrivingTrainerWatchApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F16F042E622D457DCE60512C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F9B6B30EAB67C8208FAAA5C2 /* AppModel.swift in Sources */,
+				339C82C0369742A1CE0575C0 /* DrivingTrainerApp.swift in Sources */,
+				7AB4BA42B8A1AC1991F36F10 /* RecordsView.swift in Sources */,
+				AA8A7A649E4BDB3E4410347D /* RootTabView.swift in Sources */,
+				DB470FF2D3235F0069D5635D /* RoutesView.swift in Sources */,
+				1A57F5874C03E997E4F70660 /* TrainingHomeView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1D0EAADB4FDE604F5BD5EFEA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1B840D71A2FD8ACDA1A1B827 /* DrivingTrainerWatch */;
+			targetProxy = 702810A18B432929EB6A6B0C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		83FDB4457C61C3AFEADDC3F6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		9C9C3293E2BB3E26E287AE06 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "驾考训练";
+				INFOPLIST_KEY_WKApplication = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.panwenye.DrivingTrainer.watchkitapp;
+				PRODUCT_NAME = "驾考训练";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+			};
+			name = Release;
+		};
+		A73A41619FA909BDD2D639D0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "驾考训练";
+				INFOPLIST_KEY_WKApplication = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.panwenye.DrivingTrainer.watchkitapp;
+				PRODUCT_NAME = "驾考训练";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+			};
+			name = Debug;
+		};
+		B49D795291605AFEA327E8FC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "驾考训练";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "用于记录训练轨迹，并在接近考试节点时提供提醒。";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.panwenye.DrivingTrainer;
+				PRODUCT_NAME = "驾考训练";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		C8AB3E24D4E3496F5E471CB0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "驾考训练";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "用于记录训练轨迹，并在接近考试节点时提供提醒。";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.panwenye.DrivingTrainer;
+				PRODUCT_NAME = "驾考训练";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		FAA4CC007C543D3E4C8A14EC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		248601C4EF0E338DDA0C598F /* Build configuration list for PBXProject "DrivingTrainer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				83FDB4457C61C3AFEADDC3F6 /* Debug */,
+				FAA4CC007C543D3E4C8A14EC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B0E9C709E7170D17A616CF3E /* Build configuration list for PBXNativeTarget "DrivingTrainerWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A73A41619FA909BDD2D639D0 /* Debug */,
+				9C9C3293E2BB3E26E287AE06 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		ECA4EE8ECACB95402B112B72 /* Build configuration list for PBXNativeTarget "DrivingTrainerApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B49D795291605AFEA327E8FC /* Debug */,
+				C8AB3E24D4E3496F5E471CB0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		87A0BEEFAB4309B8F48D2574 /* XCLocalSwiftPackageReference "." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = .;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1978B0D3C6E7CF7155FC8DFE /* DrivingTrainerDomain */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DrivingTrainerDomain;
+		};
+		4A6ED221EF3F6985E7726371 /* DrivingTrainerPersistence */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DrivingTrainerPersistence;
+		};
+		A972F52BC788063EBAB3C933 /* DrivingTrainerDomain */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DrivingTrainerDomain;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 14C53AD50AA42C3BC7F4DF91 /* Project object */;
+}
