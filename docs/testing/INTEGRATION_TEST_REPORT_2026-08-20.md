@@ -8,10 +8,10 @@
 
 软件侧回归通过，可以进入 iPhone + Apple Watch 真机验收。
 
-- Swift 自动化测试：23 项通过，0 项失败。
-- 跨模块集成测试：5 项通过。
+- Swift 自动化测试：29 项通过，0 项失败。
+- 跨模块集成测试：6 项通过。
 - iPhone 与嵌入 Watch 工程：构建成功。
-- 模拟器新增界面检查：训练暂停、跳过入口通过。
+- 模拟器新增界面检查：考核项目创建、模式切换、自动触发与进度推进通过。
 - 高优先级代码缺陷：0。
 - 真机、真实 GPS、真实 Watch、真实 Apple 地图武汉链接和外接鼠标：待设备验收。
 
@@ -22,16 +22,19 @@
 | IT-A01 | 通过 | 路线保存、重载、训练、提醒、结果和记录闭环通过 |
 | IT-A02 | 通过 | 同 ID 路线更新不重复 |
 | IT-A03 | 通过 | 训练记录重载后倒序 |
-| IT-A04 | 通过 | Domain、Persistence、Integration 共 23 项，0 失败 |
-| IT-A05 | 通过 | `DrivingTrainerApp` 指定 iPhone 17 模拟器构建成功，Watch target 一并构建 |
+| IT-A04 | 通过 | Domain、Persistence、Integration 共 29 项，0 失败 |
+| IT-A05 | 通过 | `DrivingTrainerApp` 指定 iPhone 17 模拟器构建成功，Watch target 一并构建并嵌入；两 target 使用独立产物名 |
 | IT-A06 | 通过 | 暂停点被忽略；恢复后跳过/完成结果及备注持久化 |
 | IT-A07 | 通过 | 导入轨迹更新后节点保持不变、版本递增 |
+| IT-A08 | 通过 | 两个考核播报点严格按顺序触发，触发后索引自动推进 |
+| IT-A09 | 通过 | 范围外、80 米低精度和 5 秒最小间隔均能阻止错误播报 |
+| IT-A10 | 通过 | 旧路线缺少 announcements 时解码为空；训练口诀和考核文本分别持久化 |
 
 自动化摘要：
 
 ```text
-Executed 23 tests, with 0 failures
-TrainingWorkflowIntegrationTests: Executed 5 tests, with 0 failures
+Executed 29 tests, with 0 failures
+TrainingWorkflowIntegrationTests: Executed 6 tests, with 0 failures
 BUILD SUCCEEDED
 ```
 
@@ -45,6 +48,12 @@ BUILD SUCCEEDED
 | 暂停后结束 | 通过（代码/构建） | 暂停状态提供结束按钮，控制器允许安全 finish |
 | 跳过节点 | 通过 | 模拟器显示“跳过”入口；自动化验证 `.skipped` 持久化 |
 | 复盘具体节点 | 通过（代码/构建） | 详情展示三类计数并按 nodeID 解析口诀 |
+| 独立考核播报模型 | 通过 | `RouteNode` 与 `ExamAnnouncement` 分别存储，旧 JSON 兼容测试通过 |
+| 考核播报引擎 | 通过 | 顺序、自动推进、范围、精度和时间间隔测试全部通过 |
+| 纯考核项目语音模式 | 通过（自动化/模拟器/构建），待真机听感 | 模拟考试分支只将 `announcementText` 传入语音合成；开始和暂停不调用 speak；模拟器进入范围后显示“已播报：开始起步”及 1/1 进度，且无完成/困难/跳过按钮 |
+| 录制/编辑考核点 | 通过（模拟器/构建） | 实际创建独立考核项目，编辑器显示预设口令和 80 米半径，地图显示橙色扬声器标记，保存后路线计数为 1 |
+| 模式空数据保护 | 通过（模拟器） | 无训练点时训练提示模式禁止开始；有考核点后切换模拟考试模式即可开始 |
+| 取消新增不残留 | 通过（代码/构建） | 新对象仅在编辑器“保存”回调中追加；取消不再写入默认“起步”项目 |
 
 ## 待真机验收
 
@@ -56,6 +65,7 @@ BUILD SUCCEEDED
 | IT-D05 驾驶安全 | 待执行 | 需要步行或副驾安全测试 |
 | IT-D06 Apple 地图真实链接 | 待执行 | 需要用户提供/复制真实武汉路线链接 |
 | IT-D07 外接鼠标滚轮 | 待执行 | 自动化模拟器不能可靠合成硬件滚轮事件 |
+| IT-U27–U28 实际语音与 Watch | 待真机听测 | 需要真实 GPS 触发、扬声器听测和配对 Watch 震动 |
 
 ## 已知限制
 
@@ -63,8 +73,8 @@ BUILD SUCCEEDED
 - Apple 地图导入会重新计算当前驾驶路线，不能读取地图 App 历史，也不保证与此前某个备选路线逐点一致。
 - Personal Team 安装需要周期性重新签名，不适合公开分发。
 - App 尚未完成真实考场路线、节点半径和播报节奏校准。
+- 模拟器能验证触发事件和界面进度，但不能替代 iPhone 扬声器听感与 Watch 触觉验收。
 
 ## 放行建议
 
 允许进入个人设备真机测试；完成 IT-D01 至 IT-D07 并回写结果后，才能标记为“iPhone + Watch 可交付版本”。
-
