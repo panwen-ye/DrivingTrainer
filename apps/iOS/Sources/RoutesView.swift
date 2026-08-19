@@ -66,7 +66,7 @@ private struct AppleMapsImportView: View {
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
 
-                    Text("在 Apple 地图中打开路线，点击共享并复制链接。导入会更新路线轨迹，已经编辑的考试节点不会被删除。")
+                    Text("在 Apple 地图中打开路线，点击共享并复制链接。导入只更新路线轨迹，已有训练提示点和考核项目不会被删除。")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
@@ -264,43 +264,76 @@ private struct RouteDetailView: View {
     @EnvironmentObject private var model: AppModel
     @State private var route: Route
     @State private var editingNode: RouteNode?
+    @State private var editingAnnouncement: ExamAnnouncement?
 
     init(route: Route) { _route = State(initialValue: route) }
 
     var body: some View {
         List {
-            if !route.path.isEmpty || !route.nodes.isEmpty {
+            if !route.path.isEmpty || !route.nodes.isEmpty || !route.announcements.isEmpty {
                 RouteDetailMap(route: route)
                     .frame(height: 260)
                     .listRowInsets(EdgeInsets())
             }
 
-            ForEach(route.nodes) { node in
-                Button {
-                    editingNode = node
-                } label: {
-                    HStack {
-                        Text("\(node.order + 1)")
-                            .font(.caption.bold())
-                            .frame(width: 28, height: 28)
-                            .background(.blue.opacity(0.12), in: Circle())
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(node.instruction).font(.headline).foregroundStyle(.primary)
-                            Text("\(node.type.title) · 提前 \(Int(node.reminderRadiusMeters)) 米提醒")
-                                .font(.caption).foregroundStyle(.secondary)
+            if !route.nodes.isEmpty {
+                Section("训练提示点") {
+                    ForEach(route.nodes) { node in
+                        Button {
+                            editingNode = node
+                        } label: {
+                            HStack {
+                                Text("\(node.order + 1)")
+                                    .font(.caption.bold())
+                                    .frame(width: 28, height: 28)
+                                    .background(.blue.opacity(0.12), in: Circle())
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(node.instruction).font(.headline).foregroundStyle(.primary)
+                                    Text("\(node.type.title) · 提前 \(Int(node.reminderRadiusMeters)) 米提醒")
+                                        .font(.caption).foregroundStyle(.secondary)
+                                }
+                            }
                         }
                     }
+                    .onDelete(perform: deleteNodes)
+                    .onMove(perform: moveNodes)
                 }
             }
-            .onDelete(perform: deleteNodes)
+
+            if !route.announcements.isEmpty {
+                Section("模拟考试播报点") {
+                    ForEach(route.announcements) { announcement in
+                        Button {
+                            editingAnnouncement = announcement
+                        } label: {
+                            HStack {
+                                Text("\(announcement.order + 1)")
+                                    .font(.caption.bold())
+                                    .foregroundStyle(.orange)
+                                    .frame(width: 28, height: 28)
+                                    .background(.orange.opacity(0.12), in: Circle())
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(announcement.project.displayName)
+                                        .font(.headline).foregroundStyle(.primary)
+                                    Text("“\(announcement.project.announcementText)” · 提前 \(Int(announcement.triggerRadiusMeters)) 米")
+                                        .font(.caption).foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                    }
+                    .onDelete(perform: deleteAnnouncements)
+                    .onMove(perform: moveAnnouncements)
+                }
+            }
         }
         .navigationTitle(route.name)
+        .toolbar { EditButton() }
         .overlay {
-            if route.nodes.isEmpty {
+            if route.nodes.isEmpty && route.announcements.isEmpty && route.path.isEmpty {
                 ContentUnavailableView(
-                    "尚未录制节点",
+                    "尚未设置路线内容",
                     systemImage: "map",
-                    description: Text("首次路线采集后会在这里显示节点。")
+                    description: Text("录制路线后可分别添加训练提示点和模拟考试播报点。")
                 )
             }
         }
@@ -311,11 +344,36 @@ private struct RouteDetailView: View {
                 persist()
             }
         }
+        .sheet(item: $editingAnnouncement) { announcement in
+            ExamAnnouncementEditorView(announcement: announcement) { updated in
+                guard let index = route.announcements.firstIndex(where: { $0.id == updated.id }) else { return }
+                route.announcements[index] = updated
+                persist()
+            }
+        }
     }
 
     private func deleteNodes(at offsets: IndexSet) {
         route.nodes.remove(atOffsets: offsets)
         for index in route.nodes.indices { route.nodes[index].order = index }
+        persist()
+    }
+
+    private func deleteAnnouncements(at offsets: IndexSet) {
+        route.announcements.remove(atOffsets: offsets)
+        for index in route.announcements.indices { route.announcements[index].order = index }
+        persist()
+    }
+
+    private func moveNodes(from source: IndexSet, to destination: Int) {
+        route.nodes.move(fromOffsets: source, toOffset: destination)
+        for index in route.nodes.indices { route.nodes[index].order = index }
+        persist()
+    }
+
+    private func moveAnnouncements(from source: IndexSet, to destination: Int) {
+        route.announcements.move(fromOffsets: source, toOffset: destination)
+        for index in route.announcements.indices { route.announcements[index].order = index }
         persist()
     }
 
@@ -343,6 +401,14 @@ private struct RouteDetailMap: View {
             ForEach(route.nodes) { node in
                 Marker("\(node.order + 1)", coordinate: Self.coordinate(node.coordinate))
             }
+            ForEach(route.announcements) { announcement in
+                Marker(
+                    "\(announcement.order + 1). \(announcement.project.displayName)",
+                    systemImage: "speaker.wave.2.fill",
+                    coordinate: Self.coordinate(announcement.coordinate)
+                )
+                .tint(.orange)
+            }
         }
         .mapStyle(.standard)
         .mapControls {
@@ -357,6 +423,7 @@ private struct RouteDetailMap: View {
     private static func mapPosition(for route: Route) -> MapCameraPosition {
         let coordinates = route.path.map { coordinate($0.coordinate) }
             + route.nodes.map { coordinate($0.coordinate) }
+            + route.announcements.map { coordinate($0.coordinate) }
         let points = coordinates.map(MKMapPoint.init)
         guard let first = points.first else { return .automatic }
 
