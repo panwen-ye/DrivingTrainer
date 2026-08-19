@@ -18,6 +18,9 @@ struct RecordingView: View {
         fallback: .automatic
     )
     @State private var visibleCamera: MapCamera?
+    @State private var recordingStartedAt: Date?
+    @State private var pausedAt: Date?
+    @State private var pausedDuration: TimeInterval = 0
 
     var body: some View {
         VStack(spacing: 0) {
@@ -78,12 +81,21 @@ struct RecordingView: View {
                     .textFieldStyle(.roundedBorder)
             }
 
-            HStack {
-                metric(title: "距离", value: distanceText)
-                Divider().frame(height: 36)
-                metric(title: "轨迹点", value: "\(recorder.track.count)")
-                Divider().frame(height: 36)
-                metric(title: "节点", value: "\(nodes.count)")
+            TimelineView(.periodic(from: .now, by: 1)) { context in
+                VStack(spacing: 10) {
+                    HStack {
+                        metric(title: "距离", value: distanceText)
+                        Divider().frame(height: 36)
+                        metric(title: "时长", value: durationText(at: context.date))
+                        Divider().frame(height: 36)
+                        metric(title: "GPS 精度", value: accuracyText)
+                    }
+                    HStack {
+                        metric(title: "轨迹点", value: "\(recorder.track.count)")
+                        Divider().frame(height: 30)
+                        metric(title: "节点", value: "\(nodes.count)")
+                    }
+                }
             }
 
             if recorder.state != .idle {
@@ -95,14 +107,14 @@ struct RecordingView: View {
             switch recorder.state {
             case .idle:
                 Button("开始录制", systemImage: "record.circle") {
-                    recorder.start()
+                    startRecording()
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
                 .disabled(!canRecord)
             case .recording:
                 HStack {
-                    Button("暂停", systemImage: "pause.fill") { recorder.pause() }
+                    Button("暂停", systemImage: "pause.fill") { pauseRecording() }
                         .buttonStyle(.bordered)
                     Button("结束并保存", systemImage: "stop.fill") { saveRecording() }
                         .buttonStyle(.borderedProminent)
@@ -110,7 +122,7 @@ struct RecordingView: View {
                 .controlSize(.large)
             case .paused:
                 HStack {
-                    Button("继续", systemImage: "play.fill") { recorder.resume() }
+                    Button("继续", systemImage: "play.fill") { resumeRecording() }
                         .buttonStyle(.bordered)
                     Button("结束并保存", systemImage: "stop.fill") { saveRecording() }
                         .buttonStyle(.borderedProminent)
@@ -172,6 +184,13 @@ struct RecordingView: View {
         return "±\(Int(accuracy)) m"
     }
 
+    private func durationText(at date: Date) -> String {
+        guard let recordingStartedAt else { return "00:00" }
+        let end = pausedAt ?? date
+        let seconds = max(0, Int(end.timeIntervalSince(recordingStartedAt) - pausedDuration))
+        return String(format: "%02d:%02d", seconds / 60, seconds % 60)
+    }
+
     private func metric(title: String, value: String) -> some View {
         VStack(spacing: 3) {
             Text(value).font(.headline.monospacedDigit())
@@ -181,6 +200,10 @@ struct RecordingView: View {
     }
 
     private func saveRecording() {
+        if let pausedAt {
+            pausedDuration += Date().timeIntervalSince(pausedAt)
+            self.pausedAt = nil
+        }
         let track = recorder.stop()
         guard !track.isEmpty else { return }
         isSaving = true
@@ -195,6 +218,26 @@ struct RecordingView: View {
             isSaving = false
             dismiss()
         }
+    }
+
+    private func startRecording() {
+        recordingStartedAt = Date()
+        pausedAt = nil
+        pausedDuration = 0
+        recorder.start()
+    }
+
+    private func pauseRecording() {
+        pausedAt = Date()
+        recorder.pause()
+    }
+
+    private func resumeRecording() {
+        if let pausedAt {
+            pausedDuration += Date().timeIntervalSince(pausedAt)
+        }
+        pausedAt = nil
+        recorder.resume()
     }
 
     private func addNode() {
