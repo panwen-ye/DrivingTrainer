@@ -69,7 +69,7 @@ Apple 地图共享链接
 ## 验证清单
 
 - iPhone 目标使用 iOS 26.5 SDK 编译成功。
-- 自动化 Domain、Persistence、Integration 测试 21 项全部通过。
+- 自动化 Domain、Persistence、Integration 测试 23 项全部通过。
 - iPhone 17 模拟器中放大、缩小按钮均可访问。
 - 点击放大后地图比例尺从约 36 米变化为约 15 米。
 - 缩放控件保持 42 点宽并位于右下角，不再横向遮挡地图。
