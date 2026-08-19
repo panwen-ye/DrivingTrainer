@@ -3,6 +3,7 @@ import DrivingTrainerDomain
 import DrivingTrainerLocationKit
 import MapKit
 import SwiftUI
+import UIKit
 
 struct RecordingView: View {
     @Environment(\.dismiss) private var dismiss
@@ -50,6 +51,11 @@ struct RecordingView: View {
         }
         .mapControlVisibility(.visible)
         .mapStyle(.standard)
+        .background {
+            MapScrollWheelZoomHandler { scale in
+                zoomMap(by: scale)
+            }
+        }
         .onMapCameraChange(frequency: .continuous) { context in
             visibleCamera = context.camera
         }
@@ -57,11 +63,11 @@ struct RecordingView: View {
         .overlay(alignment: .top) {
             permissionBanner
         }
-        .overlay(alignment: .trailing) {
+        .overlay(alignment: .bottomTrailing) {
             MapZoomButtons { scale in
                 zoomMap(by: scale)
             }
-            .padding(.trailing, 10)
+            .padding(12)
         }
     }
 
@@ -213,7 +219,9 @@ struct RecordingView: View {
             pitch: camera.pitch
         )
         visibleCamera = updatedCamera
-        cameraPosition = .camera(updatedCamera)
+        withAnimation(.easeOut(duration: 0.18)) {
+            cameraPosition = .camera(updatedCamera)
+        }
     }
 }
 
@@ -226,24 +234,127 @@ struct MapZoomButtons: View {
                 onZoom(0.5)
             } label: {
                 Image(systemName: "plus")
-                    .frame(width: 44, height: 44)
+                    .font(.system(size: 17, weight: .semibold))
+                    .frame(width: 42, height: 38)
+                    .contentShape(Rectangle())
             }
             .accessibilityLabel("放大地图")
+            .accessibilityHint("也可以双指张开或使用鼠标滚轮向上滚动")
+            .buttonRepeatBehavior(.enabled)
 
             Divider()
+                .padding(.horizontal, 8)
 
             Button {
                 onZoom(2)
             } label: {
                 Image(systemName: "minus")
-                    .frame(width: 44, height: 44)
+                    .font(.system(size: 17, weight: .semibold))
+                    .frame(width: 42, height: 38)
+                    .contentShape(Rectangle())
             }
             .accessibilityLabel("缩小地图")
+            .accessibilityHint("也可以双指捏合或使用鼠标滚轮向下滚动")
+            .buttonRepeatBehavior(.enabled)
         }
         .buttonStyle(.plain)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 10))
+        .foregroundStyle(.primary)
+        .fixedSize()
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 11, style: .continuous))
         .overlay {
-            RoundedRectangle(cornerRadius: 10).stroke(.quaternary)
+            RoundedRectangle(cornerRadius: 11, style: .continuous)
+                .stroke(.primary.opacity(0.12), lineWidth: 0.5)
+        }
+        .shadow(color: .black.opacity(0.16), radius: 4, y: 2)
+    }
+}
+
+struct MapScrollWheelZoomHandler: UIViewRepresentable {
+    let onZoom: (Double) -> Void
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(onZoom: onZoom)
+    }
+
+    func makeUIView(context: Context) -> UIView {
+        let view = UIView(frame: .zero)
+        view.isUserInteractionEnabled = false
+        DispatchQueue.main.async {
+            context.coordinator.attach(toMapNear: view)
+        }
+        return view
+    }
+
+    func updateUIView(_ view: UIView, context: Context) {
+        context.coordinator.onZoom = onZoom
+        DispatchQueue.main.async {
+            context.coordinator.attach(toMapNear: view)
+        }
+    }
+
+    static func dismantleUIView(_ view: UIView, coordinator: Coordinator) {
+        coordinator.detach()
+    }
+
+    final class Coordinator: NSObject, UIGestureRecognizerDelegate {
+        var onZoom: (Double) -> Void
+        private weak var mapView: MKMapView?
+        private var scrollRecognizer: UIPanGestureRecognizer?
+
+        init(onZoom: @escaping (Double) -> Void) {
+            self.onZoom = onZoom
+        }
+
+        func attach(toMapNear marker: UIView) {
+            guard mapView == nil, let mapView = findMapView(near: marker) else { return }
+
+            let recognizer = UIPanGestureRecognizer(target: self, action: #selector(handleScroll(_:)))
+            recognizer.allowedScrollTypesMask = [.continuous, .discrete]
+            recognizer.cancelsTouchesInView = false
+            recognizer.delegate = self
+            mapView.addGestureRecognizer(recognizer)
+
+            self.mapView = mapView
+            scrollRecognizer = recognizer
+        }
+
+        func detach() {
+            if let scrollRecognizer { mapView?.removeGestureRecognizer(scrollRecognizer) }
+            scrollRecognizer = nil
+            mapView = nil
+        }
+
+        @objc private func handleScroll(_ recognizer: UIPanGestureRecognizer) {
+            guard recognizer.state == .changed else { return }
+            let verticalMovement = recognizer.translation(in: recognizer.view).y
+            guard abs(verticalMovement) >= 8 else { return }
+
+            onZoom(verticalMovement < 0 ? 0.5 : 2)
+            recognizer.setTranslation(.zero, in: recognizer.view)
+        }
+
+        func gestureRecognizer(
+            _ gestureRecognizer: UIGestureRecognizer,
+            shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+        ) -> Bool {
+            true
+        }
+
+        private func findMapView(near marker: UIView) -> MKMapView? {
+            var ancestor = marker.superview
+            while let view = ancestor {
+                if let mapView = findMapView(in: view) { return mapView }
+                ancestor = view.superview
+            }
+            return nil
+        }
+
+        private func findMapView(in view: UIView) -> MKMapView? {
+            if let mapView = view as? MKMapView { return mapView }
+            for subview in view.subviews where subview !== view {
+                if let mapView = findMapView(in: subview) { return mapView }
+            }
+            return nil
         }
     }
 }
