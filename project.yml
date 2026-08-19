@@ -35,7 +35,7 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.panwenye.DrivingTrainer
-        PRODUCT_NAME: 驾考训练
+        PRODUCT_NAME: DrivingTrainerApp
         GENERATE_INFOPLIST_FILE: true
         INFOPLIST_KEY_CFBundleDisplayName: 驾考训练
         INFOPLIST_KEY_NSLocationWhenInUseUsageDescription: 用于记录训练轨迹，并在接近考试节点时提供提醒。
@@ -54,7 +54,7 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.panwenye.DrivingTrainer.watchkitapp
-        PRODUCT_NAME: 驾考训练
+        PRODUCT_NAME: DrivingTrainerWatch
         GENERATE_INFOPLIST_FILE: true
         INFOPLIST_KEY_CFBundleDisplayName: 驾考训练
         INFOPLIST_KEY_WKApplication: true
