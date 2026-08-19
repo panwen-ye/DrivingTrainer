@@ -4,7 +4,7 @@
 
 ## 当前产品定位
 
-- iPhone 是主设备：路线录制、地图查看、节点编辑、训练和复盘。
+- iPhone 是主设备：路线录制、Apple 地图共享链接导入、地图查看、节点编辑、训练和复盘。
 - Apple Watch 是辅助设备：快捷标记、震动提示、训练状态查看。
 - MVP 优先本地运行、离线可用，不依赖自建服务器。
 - 第一目标是在两周内交付可安装到个人 iPhone 的轻量 MVP，支持武汉同心考场 1、3、4 号路线训练。
@@ -14,6 +14,7 @@
 
 - [产品范围与页面原型](docs/product/PRODUCT_AND_PROTOTYPE.md)
 - [技术与服务架构](docs/architecture/ARCHITECTURE.md)
+- [地图接入与坐标链路](docs/architecture/MAP_INTEGRATION.md)
 - [初始化与上机方案](docs/setup/INITIALIZATION.md)
 - [资源与应用清单](docs/setup/RESOURCES.md)
 - [分阶段开发计划](docs/planning/ROADMAP.md)
@@ -51,7 +52,7 @@ DrivingTrainer/
 
 - 语言：Swift，不使用 Java。
 - UI：SwiftUI。
-- 地图与定位：MapKit + Core Location。
+- 地图与定位：MapKit + Core Location；支持通过 Apple 地图路线共享链接导入轨迹。
 - 存储：首版使用轻量 JSON/Codable 文件存储；达到真实数据量后再决定是否迁移 SwiftData。
 - Watch：两周 MVP 只做震动提醒和下一节点摘要；复杂通信与手表录制后移。
 - 服务端：无；首版完全本地运行。
