@@ -33,7 +33,8 @@ iPhone GPS
 - 初始相机优先跟随用户位置；定位尚未取得时由 MapKit 自动选择视野。
 - `interactionModes: [.pan, .zoom]` 明确允许拖动和双指缩放。
 - `MapUserLocationButton`、`MapCompass` 和 `MapScaleView` 分别提供回到当前位置、方向和比例尺。
-- 自定义 `MapZoomButtons` 提供始终可见的加/减按钮。点击后按 0.5 或 2 倍调整相机距离，并限制在 40 米至 20,000 公里，避免相机距离无效。
+- 自定义 `MapZoomButtons` 采用 Apple 地图式紧凑纵向浮层，固定在地图右下角。点击后按一个层级（0.5 或 2 倍相机距离）平滑缩放，长按可连续缩放，并限制在 40 米至 20,000 公里。
+- `MapScrollWheelZoomHandler` 只监听鼠标和触控板的滚动类型：向上滚动放大、向下滚动缩小；不取消 MapKit 自身手势，因此手指拖动、双指缩放和触控板操作继续由原生地图处理。
 - 实时轨迹点转换为 `CLLocationCoordinate2D`，两个点以上时由 `MapPolyline` 连成蓝色轨迹。
 
 ## 训练地图
@@ -71,4 +72,5 @@ Apple 地图共享链接
 - 自动化 Domain、Persistence、Integration 测试 21 项全部通过。
 - iPhone 17 模拟器中放大、缩小按钮均可访问。
 - 点击放大后地图比例尺从约 36 米变化为约 15 米。
+- 缩放控件保持 42 点宽并位于右下角，不再横向遮挡地图。
 - 训练节点标记、当前位置按钮和 Apple 地图法律信息正常显示。
