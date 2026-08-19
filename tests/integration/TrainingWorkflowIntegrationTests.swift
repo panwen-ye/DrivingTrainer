@@ -124,6 +124,81 @@ final class TrainingWorkflowIntegrationTests: XCTestCase {
         XCTAssertEqual(sessionIDs, [newer.id, older.id])
     }
 
+    func testPauseResumeAndSkippedNodePersistInSession() async throws {
+        let directory = temporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = try DrivingDataStore(directory: directory)
+        let start = Date(timeIntervalSince1970: 1_900_000_000)
+        let first = Coordinate(latitude: 30.50, longitude: 114.30)
+        let second = Coordinate(latitude: 30.51, longitude: 114.31)
+        let route = Route(
+            name: "暂停与跳过测试",
+            venue: "武汉同心考场",
+            nodes: [
+                RouteNode(coordinate: first, order: 0, type: .start, instruction: "准备起步"),
+                RouteNode(coordinate: second, order: 1, type: .uTurn, instruction: "前方掉头")
+            ]
+        )
+
+        var controller = PracticeController(route: route)
+        try controller.start(at: start)
+        try controller.pause()
+        _ = try controller.receive(
+            TrackPoint(coordinate: first, timestamp: start.addingTimeInterval(1), horizontalAccuracy: 5)
+        )
+        XCTAssertTrue(controller.session?.track.isEmpty == true)
+
+        try controller.resume()
+        _ = try controller.receive(
+            TrackPoint(coordinate: first, timestamp: start.addingTimeInterval(2), horizontalAccuracy: 5)
+        )
+        try controller.markCurrentNode(.skipped, note: "本轮不练起步", at: start.addingTimeInterval(3))
+        try controller.markCurrentNode(.completed, at: start.addingTimeInterval(4))
+
+        let session = try controller.finish(at: start.addingTimeInterval(20))
+        try await store.saveSession(session)
+        let sessions = try await store.sessions()
+        let reloaded = try XCTUnwrap(sessions.first)
+
+        XCTAssertEqual(reloaded.track.count, 1)
+        XCTAssertEqual(reloaded.attempts.map(\.outcome), [.skipped, .completed])
+        XCTAssertEqual(reloaded.attempts.first?.note, "本轮不练起步")
+        XCTAssertEqual(reloaded.endedAt, start.addingTimeInterval(20))
+    }
+
+    func testImportedPathUpdatePreservesExamNodes() async throws {
+        let directory = temporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = try DrivingDataStore(directory: directory)
+        let node = RouteNode(
+            coordinate: Coordinate(latitude: 30.60, longitude: 114.30),
+            order: 0,
+            type: .trafficLight,
+            instruction: "路口观察信号灯"
+        )
+        var route = Route(name: "1号线", venue: "武汉同心考场", nodes: [node])
+        try await store.upsertRoute(route)
+
+        route.path = [
+            TrackPoint(
+                coordinate: Coordinate(latitude: 30.60, longitude: 114.30),
+                horizontalAccuracy: 0
+            ),
+            TrackPoint(
+                coordinate: Coordinate(latitude: 30.61, longitude: 114.31),
+                horizontalAccuracy: 0
+            )
+        ]
+        route.version += 1
+        try await store.upsertRoute(route)
+
+        let routes = try await store.routes()
+        let reloaded = try XCTUnwrap(routes.first)
+        XCTAssertEqual(reloaded.path.count, 2)
+        XCTAssertEqual(reloaded.nodes, [node])
+        XCTAssertEqual(reloaded.version, 2)
+    }
+
     private func temporaryDirectory() -> URL {
         FileManager.default.temporaryDirectory
             .appendingPathComponent("DrivingTrainerIntegration-\(UUID().uuidString)", isDirectory: true)
