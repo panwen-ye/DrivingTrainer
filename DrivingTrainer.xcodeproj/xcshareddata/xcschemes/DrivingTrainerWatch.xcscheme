@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1B840D71A2FD8ACDA1A1B827"
-               BuildableName = "&#x9a7e;&#x8003;&#x8bad;&#x7ec3;.app"
+               BuildableName = "DrivingTrainerWatch.app"
                BlueprintName = "DrivingTrainerWatch"
                ReferencedContainer = "container:DrivingTrainer.xcodeproj">
             </BuildableReference>
@@ -31,7 +31,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1B840D71A2FD8ACDA1A1B827"
-            BuildableName = "&#x9a7e;&#x8003;&#x8bad;&#x7ec3;.app"
+            BuildableName = "DrivingTrainerWatch.app"
             BlueprintName = "DrivingTrainerWatch"
             ReferencedContainer = "container:DrivingTrainer.xcodeproj">
          </BuildableReference>
@@ -54,7 +54,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1B840D71A2FD8ACDA1A1B827"
-            BuildableName = "&#x9a7e;&#x8003;&#x8bad;&#x7ec3;.app"
+            BuildableName = "DrivingTrainerWatch.app"
             BlueprintName = "DrivingTrainerWatch"
             ReferencedContainer = "container:DrivingTrainer.xcodeproj">
          </BuildableReference>
@@ -71,7 +71,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1B840D71A2FD8ACDA1A1B827"
-            BuildableName = "&#x9a7e;&#x8003;&#x8bad;&#x7ec3;.app"
+            BuildableName = "DrivingTrainerWatch.app"
             BlueprintName = "DrivingTrainerWatch"
             ReferencedContainer = "container:DrivingTrainer.xcodeproj">
          </BuildableReference>
