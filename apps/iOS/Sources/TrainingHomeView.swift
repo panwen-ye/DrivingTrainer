@@ -52,16 +52,19 @@ private struct TrainingPreviewView: View {
     @State private var controller: PracticeController
     @State private var lastReminder: ReminderEvent?
     @State private var isSaving = false
+    @State private var cameraPosition: MapCameraPosition
+    @State private var visibleCamera: MapCamera?
     private let speaker = AVSpeechSynthesizer()
 
     init(route: Route) {
         self.route = route
         _controller = State(initialValue: PracticeController(route: route))
+        _cameraPosition = State(initialValue: Self.mapPosition(for: route))
     }
 
     var body: some View {
         VStack(spacing: 0) {
-            Map {
+            Map(position: $cameraPosition, interactionModes: [.pan, .zoom]) {
                 UserAnnotation()
                 if route.path.count >= 2 {
                     MapPolyline(coordinates: route.path.map(\.coordinate.clLocationCoordinate))
@@ -71,7 +74,22 @@ private struct TrainingPreviewView: View {
                     Marker("\(node.order + 1)", coordinate: node.coordinate.clLocationCoordinate)
                 }
             }
-            .mapControls { MapUserLocationButton() }
+            .mapControls {
+                MapUserLocationButton()
+                MapCompass()
+                MapScaleView()
+            }
+            .mapControlVisibility(.visible)
+            .mapStyle(.standard)
+            .onMapCameraChange(frequency: .continuous) { context in
+                visibleCamera = context.camera
+            }
+            .overlay(alignment: .trailing) {
+                MapZoomButtons { scale in
+                    zoomMap(by: scale)
+                }
+                .padding(.trailing, 10)
+            }
 
             VStack(spacing: 14) {
                 if let node = controller.currentNode {
@@ -139,11 +157,44 @@ private struct TrainingPreviewView: View {
         recorder.authorizationStatus == .authorizedWhenInUse || recorder.authorizationStatus == .authorizedAlways
     }
 
+    private static func mapPosition(for route: Route) -> MapCameraPosition {
+        guard !route.path.isEmpty || !route.nodes.isEmpty else {
+            return .userLocation(followsHeading: false, fallback: .automatic)
+        }
+
+        let coordinates = route.path.map(\.coordinate.clLocationCoordinate)
+            + route.nodes.map(\.coordinate.clLocationCoordinate)
+        let points = coordinates.map(MKMapPoint.init)
+        guard let firstPoint = points.first else { return .automatic }
+
+        var rect = MKMapRect(origin: firstPoint, size: MKMapSize(width: 1, height: 1))
+        for point in points.dropFirst() {
+            rect = rect.union(MKMapRect(origin: point, size: MKMapSize(width: 1, height: 1)))
+        }
+
+        let horizontalPadding = max(rect.size.width * 0.15, 500)
+        let verticalPadding = max(rect.size.height * 0.15, 500)
+        return .rect(rect.insetBy(dx: -horizontalPadding, dy: -verticalPadding))
+    }
+
     private func start() {
         try? controller.start()
         recorder.start()
         speak("开始训练。前方第一个节点：\(controller.currentNode?.instruction ?? "请按路线行驶")")
         model.updateWatch(route: route.name, instruction: controller.currentNode?.instruction ?? "请按路线行驶")
+    }
+
+    private func zoomMap(by scale: Double) {
+        guard let camera = visibleCamera else { return }
+        let distance = min(max(camera.distance * scale, 40), 20_000_000)
+        let updatedCamera = MapCamera(
+            centerCoordinate: camera.centerCoordinate,
+            distance: distance,
+            heading: camera.heading,
+            pitch: camera.pitch
+        )
+        visibleCamera = updatedCamera
+        cameraPosition = .camera(updatedCamera)
     }
 
     private func resume() {
