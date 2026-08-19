@@ -269,6 +269,12 @@ private struct RouteDetailView: View {
 
     var body: some View {
         List {
+            if !route.path.isEmpty || !route.nodes.isEmpty {
+                RouteDetailMap(route: route)
+                    .frame(height: 260)
+                    .listRowInsets(EdgeInsets())
+            }
+
             ForEach(route.nodes) { node in
                 Button {
                     editingNode = node
@@ -316,5 +322,54 @@ private struct RouteDetailView: View {
     private func persist() {
         route.version += 1
         Task { await model.saveRoute(route) }
+    }
+}
+
+private struct RouteDetailMap: View {
+    let route: Route
+    @State private var cameraPosition: MapCameraPosition
+
+    init(route: Route) {
+        self.route = route
+        _cameraPosition = State(initialValue: Self.mapPosition(for: route))
+    }
+
+    var body: some View {
+        Map(position: $cameraPosition, interactionModes: [.pan, .zoom]) {
+            if route.path.count >= 2 {
+                MapPolyline(coordinates: route.path.map { Self.coordinate($0.coordinate) })
+                    .stroke(.blue, lineWidth: 5)
+            }
+            ForEach(route.nodes) { node in
+                Marker("\(node.order + 1)", coordinate: Self.coordinate(node.coordinate))
+            }
+        }
+        .mapStyle(.standard)
+        .mapControls {
+            MapCompass()
+            MapScaleView()
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .padding(.horizontal)
+        .padding(.vertical, 8)
+    }
+
+    private static func mapPosition(for route: Route) -> MapCameraPosition {
+        let coordinates = route.path.map { coordinate($0.coordinate) }
+            + route.nodes.map { coordinate($0.coordinate) }
+        let points = coordinates.map(MKMapPoint.init)
+        guard let first = points.first else { return .automatic }
+
+        var rect = MKMapRect(origin: first, size: MKMapSize(width: 1, height: 1))
+        for point in points.dropFirst() {
+            rect = rect.union(MKMapRect(origin: point, size: MKMapSize(width: 1, height: 1)))
+        }
+        let horizontalPadding = max(rect.size.width * 0.15, 500)
+        let verticalPadding = max(rect.size.height * 0.15, 500)
+        return .rect(rect.insetBy(dx: -horizontalPadding, dy: -verticalPadding))
+    }
+
+    private static func coordinate(_ coordinate: Coordinate) -> CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
     }
 }
