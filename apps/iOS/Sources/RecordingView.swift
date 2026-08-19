@@ -12,6 +12,11 @@ struct RecordingView: View {
     @State private var isSaving = false
     @State private var nodes: [RouteNode] = []
     @State private var editingNode: RouteNode?
+    @State private var cameraPosition: MapCameraPosition = .userLocation(
+        followsHeading: false,
+        fallback: .automatic
+    )
+    @State private var visibleCamera: MapCamera?
 
     var body: some View {
         VStack(spacing: 0) {
@@ -31,7 +36,7 @@ struct RecordingView: View {
     }
 
     private var map: some View {
-        Map {
+        Map(position: $cameraPosition, interactionModes: [.pan, .zoom]) {
             UserAnnotation()
             if coordinates.count >= 2 {
                 MapPolyline(coordinates: coordinates)
@@ -41,10 +46,22 @@ struct RecordingView: View {
         .mapControls {
             MapUserLocationButton()
             MapCompass()
+            MapScaleView()
+        }
+        .mapControlVisibility(.visible)
+        .mapStyle(.standard)
+        .onMapCameraChange(frequency: .continuous) { context in
+            visibleCamera = context.camera
         }
         .frame(maxHeight: .infinity)
         .overlay(alignment: .top) {
             permissionBanner
+        }
+        .overlay(alignment: .trailing) {
+            MapZoomButtons { scale in
+                zoomMap(by: scale)
+            }
+            .padding(.trailing, 10)
         }
     }
 
@@ -184,6 +201,50 @@ struct RecordingView: View {
         )
         nodes.append(node)
         editingNode = node
+    }
+
+    private func zoomMap(by scale: Double) {
+        guard let camera = visibleCamera else { return }
+        let distance = min(max(camera.distance * scale, 40), 20_000_000)
+        let updatedCamera = MapCamera(
+            centerCoordinate: camera.centerCoordinate,
+            distance: distance,
+            heading: camera.heading,
+            pitch: camera.pitch
+        )
+        visibleCamera = updatedCamera
+        cameraPosition = .camera(updatedCamera)
+    }
+}
+
+struct MapZoomButtons: View {
+    let onZoom: (Double) -> Void
+
+    var body: some View {
+        VStack(spacing: 0) {
+            Button {
+                onZoom(0.5)
+            } label: {
+                Image(systemName: "plus")
+                    .frame(width: 44, height: 44)
+            }
+            .accessibilityLabel("放大地图")
+
+            Divider()
+
+            Button {
+                onZoom(2)
+            } label: {
+                Image(systemName: "minus")
+                    .frame(width: 44, height: 44)
+            }
+            .accessibilityLabel("缩小地图")
+        }
+        .buttonStyle(.plain)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 10))
+        .overlay {
+            RoundedRectangle(cornerRadius: 10).stroke(.quaternary)
+        }
     }
 }
 
