@@ -81,14 +81,19 @@ private struct TrainingPreviewView: View {
             }
             .mapControlVisibility(.visible)
             .mapStyle(.standard)
+            .background {
+                MapScrollWheelZoomHandler { scale in
+                    zoomMap(by: scale)
+                }
+            }
             .onMapCameraChange(frequency: .continuous) { context in
                 visibleCamera = context.camera
             }
-            .overlay(alignment: .trailing) {
+            .overlay(alignment: .bottomTrailing) {
                 MapZoomButtons { scale in
                     zoomMap(by: scale)
                 }
-                .padding(.trailing, 10)
+                .padding(12)
             }
 
             VStack(spacing: 14) {
@@ -194,7 +199,9 @@ private struct TrainingPreviewView: View {
             pitch: camera.pitch
         )
         visibleCamera = updatedCamera
-        cameraPosition = .camera(updatedCamera)
+        withAnimation(.easeOut(duration: 0.18)) {
+            cameraPosition = .camera(updatedCamera)
+        }
     }
 
     private func resume() {
