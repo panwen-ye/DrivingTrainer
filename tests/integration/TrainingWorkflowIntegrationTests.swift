@@ -176,7 +176,17 @@ final class TrainingWorkflowIntegrationTests: XCTestCase {
             type: .trafficLight,
             instruction: "路口观察信号灯"
         )
-        var route = Route(name: "1号线", venue: "武汉同心考场", nodes: [node])
+        let announcement = ExamAnnouncement(
+            coordinate: node.coordinate,
+            order: 0,
+            project: .intersection
+        )
+        var route = Route(
+            name: "1号线",
+            venue: "武汉同心考场",
+            nodes: [node],
+            announcements: [announcement]
+        )
         try await store.upsertRoute(route)
 
         route.path = [
@@ -196,7 +206,47 @@ final class TrainingWorkflowIntegrationTests: XCTestCase {
         let reloaded = try XCTUnwrap(routes.first)
         XCTAssertEqual(reloaded.path.count, 2)
         XCTAssertEqual(reloaded.nodes, [node])
+        XCTAssertEqual(reloaded.announcements, [announcement])
         XCTAssertEqual(reloaded.version, 2)
+    }
+
+    func testExamAnnouncementsPersistAndTriggerIndependentlyFromTrainingNodes() async throws {
+        let directory = temporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = try DrivingDataStore(directory: directory)
+        let coordinate = Coordinate(latitude: 30.62, longitude: 114.32)
+        let trainingNode = RouteNode(
+            coordinate: coordinate,
+            order: 0,
+            type: .straightDriving,
+            instruction: "保持方向稳定，不要看挡位"
+        )
+        let announcement = ExamAnnouncement(
+            coordinate: coordinate,
+            order: 0,
+            project: .straightDriving,
+            triggerRadiusMeters: 60
+        )
+        let route = Route(
+            name: "播报隔离测试",
+            venue: "武汉同心考场",
+            nodes: [trainingNode],
+            announcements: [announcement]
+        )
+        try await store.upsertRoute(route)
+
+        let routes = try await store.routes()
+        let reloaded = try XCTUnwrap(routes.first)
+        XCTAssertEqual(reloaded.nodes.first?.instruction, "保持方向稳定，不要看挡位")
+        XCTAssertEqual(reloaded.announcements.first?.project.announcementText, "开始直线行驶")
+
+        var engine = ExamAnnouncementEngine(minimumInterval: 0)
+        let event = engine.evaluate(
+            location: TrackPoint(coordinate: coordinate, horizontalAccuracy: 5),
+            announcements: reloaded.announcements
+        )
+        XCTAssertEqual(event?.announcement.project.announcementText, "开始直线行驶")
+        XCTAssertNotEqual(event?.announcement.project.announcementText, reloaded.nodes.first?.instruction)
     }
 
     private func temporaryDirectory() -> URL {
