@@ -58,6 +58,7 @@ targets:
         GENERATE_INFOPLIST_FILE: true
         INFOPLIST_KEY_CFBundleDisplayName: 驾考训练
         INFOPLIST_KEY_WKApplication: true
+        INFOPLIST_KEY_WKCompanionAppBundleIdentifier: com.panwenye.DrivingTrainer
 
 schemes:
   DrivingTrainerApp:
