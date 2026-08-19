@@ -265,15 +265,44 @@ private struct RouteDetailView: View {
     @State private var route: Route
     @State private var editingNode: RouteNode?
     @State private var editingAnnouncement: ExamAnnouncement?
+    @State private var selectedCoordinate: Coordinate?
 
     init(route: Route) { _route = State(initialValue: route) }
 
     var body: some View {
         List {
             if !route.path.isEmpty || !route.nodes.isEmpty || !route.announcements.isEmpty {
-                RouteDetailMap(route: route)
+                RouteDetailMap(
+                    route: route,
+                    selectedCoordinate: selectedCoordinate,
+                    onSelectCoordinate: { selectedCoordinate = $0 }
+                )
                     .frame(height: 260)
                     .listRowInsets(EdgeInsets())
+
+                Section("停车后补充路线点") {
+                    if let selectedCoordinate {
+                        Text("已选择地图位置：\(selectedCoordinate.latitude, specifier: "%.5f"), \(selectedCoordinate.longitude, specifier: "%.5f")")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+
+                        HStack {
+                            Button("添加训练提示", systemImage: "mappin.and.ellipse") {
+                                prepareTrainingNode(at: selectedCoordinate)
+                            }
+                            .buttonStyle(.bordered)
+
+                            Button("添加考核项目", systemImage: "speaker.wave.2") {
+                                prepareExamAnnouncement(at: selectedCoordinate)
+                            }
+                            .buttonStyle(.bordered)
+                        }
+                    } else {
+                        Label("点击上方地图选择位置，再添加训练提示或考核项目。", systemImage: "hand.tap")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+                }
             }
 
             if !route.nodes.isEmpty {
@@ -339,15 +368,23 @@ private struct RouteDetailView: View {
         }
         .sheet(item: $editingNode) { node in
             NodeEditorView(node: node) { updated in
-                guard let index = route.nodes.firstIndex(where: { $0.id == updated.id }) else { return }
-                route.nodes[index] = updated
+                if let index = route.nodes.firstIndex(where: { $0.id == updated.id }) {
+                    route.nodes[index] = updated
+                } else {
+                    route.nodes.append(updated)
+                }
+                selectedCoordinate = nil
                 persist()
             }
         }
         .sheet(item: $editingAnnouncement) { announcement in
             ExamAnnouncementEditorView(announcement: announcement) { updated in
-                guard let index = route.announcements.firstIndex(where: { $0.id == updated.id }) else { return }
-                route.announcements[index] = updated
+                if let index = route.announcements.firstIndex(where: { $0.id == updated.id }) {
+                    route.announcements[index] = updated
+                } else {
+                    route.announcements.append(updated)
+                }
+                selectedCoordinate = nil
                 persist()
             }
         }
@@ -377,6 +414,23 @@ private struct RouteDetailView: View {
         persist()
     }
 
+    private func prepareTrainingNode(at coordinate: Coordinate) {
+        editingNode = RouteNode(
+            coordinate: coordinate,
+            order: route.nodes.count,
+            type: .custom,
+            instruction: "前方训练提示点"
+        )
+    }
+
+    private func prepareExamAnnouncement(at coordinate: Coordinate) {
+        editingAnnouncement = ExamAnnouncement(
+            coordinate: coordinate,
+            order: route.announcements.count,
+            project: .start
+        )
+    }
+
     private func persist() {
         route.version += 1
         Task { await model.saveRoute(route) }
@@ -385,35 +439,59 @@ private struct RouteDetailView: View {
 
 private struct RouteDetailMap: View {
     let route: Route
+    let selectedCoordinate: Coordinate?
+    let onSelectCoordinate: (Coordinate) -> Void
     @State private var cameraPosition: MapCameraPosition
 
-    init(route: Route) {
+    init(
+        route: Route,
+        selectedCoordinate: Coordinate?,
+        onSelectCoordinate: @escaping (Coordinate) -> Void
+    ) {
         self.route = route
+        self.selectedCoordinate = selectedCoordinate
+        self.onSelectCoordinate = onSelectCoordinate
         _cameraPosition = State(initialValue: Self.mapPosition(for: route))
     }
 
     var body: some View {
-        Map(position: $cameraPosition, interactionModes: [.pan, .zoom]) {
-            if route.path.count >= 2 {
-                MapPolyline(coordinates: route.path.map { Self.coordinate($0.coordinate) })
-                    .stroke(.blue, lineWidth: 5)
+        MapReader { proxy in
+            Map(position: $cameraPosition, interactionModes: [.pan, .zoom]) {
+                if route.path.count >= 2 {
+                    MapPolyline(coordinates: route.path.map { Self.coordinate($0.coordinate) })
+                        .stroke(.blue, lineWidth: 5)
+                }
+                ForEach(route.nodes) { node in
+                    Marker("\(node.order + 1)", coordinate: Self.coordinate(node.coordinate))
+                }
+                ForEach(route.announcements) { announcement in
+                    Marker(
+                        "\(announcement.order + 1). \(announcement.project.displayName)",
+                        systemImage: "speaker.wave.2.fill",
+                        coordinate: Self.coordinate(announcement.coordinate)
+                    )
+                    .tint(.orange)
+                }
+                if let selectedCoordinate {
+                    Marker(
+                        "已选位置",
+                        systemImage: "scope",
+                        coordinate: Self.coordinate(selectedCoordinate)
+                    )
+                    .tint(.purple)
+                }
             }
-            ForEach(route.nodes) { node in
-                Marker("\(node.order + 1)", coordinate: Self.coordinate(node.coordinate))
+            .mapStyle(.standard)
+            .mapControls {
+                MapCompass()
+                MapScaleView()
             }
-            ForEach(route.announcements) { announcement in
-                Marker(
-                    "\(announcement.order + 1). \(announcement.project.displayName)",
-                    systemImage: "speaker.wave.2.fill",
-                    coordinate: Self.coordinate(announcement.coordinate)
+            .onTapGesture { position in
+                guard let coordinate = proxy.convert(position, from: .local) else { return }
+                onSelectCoordinate(
+                    Coordinate(latitude: coordinate.latitude, longitude: coordinate.longitude)
                 )
-                .tint(.orange)
             }
-        }
-        .mapStyle(.standard)
-        .mapControls {
-            MapCompass()
-            MapScaleView()
         }
         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         .padding(.horizontal)
