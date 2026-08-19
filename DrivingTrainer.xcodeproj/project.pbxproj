@@ -354,7 +354,7 @@
 				INFOPLIST_KEY_WKApplication = YES;
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.panwenye.DrivingTrainer;
 				PRODUCT_BUNDLE_IDENTIFIER = com.panwenye.DrivingTrainer.watchkitapp;
-				PRODUCT_NAME = "驾考训练";
+				PRODUCT_NAME = DrivingTrainerWatch;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
@@ -370,7 +370,7 @@
 				INFOPLIST_KEY_WKApplication = YES;
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.panwenye.DrivingTrainer;
 				PRODUCT_BUNDLE_IDENTIFIER = com.panwenye.DrivingTrainer.watchkitapp;
-				PRODUCT_NAME = "驾考训练";
+				PRODUCT_NAME = DrivingTrainerWatch;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
@@ -392,7 +392,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.panwenye.DrivingTrainer;
-				PRODUCT_NAME = "驾考训练";
+				PRODUCT_NAME = DrivingTrainerApp;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -413,7 +413,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.panwenye.DrivingTrainer;
-				PRODUCT_NAME = "驾考训练";
+				PRODUCT_NAME = DrivingTrainerApp;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
