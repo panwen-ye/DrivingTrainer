@@ -11,7 +11,7 @@
 - 自动化测试：21 项通过，0 项失败。
 - Apple 工程构建：通过，0 个编译错误，0 个编译警告。
 - 模拟器安装与启动：通过。
-- 模拟器端到端用例：12 项软件路径均通过。
+- 模拟器端到端用例：14 项软件路径均通过。
 - 高优先级未解决缺陷：0。
 - 真机用例：5 项待执行；原因是当前 Mac 尚未检测到已连接并信任的 iPhone，Personal Team 显示 0 台 Provisioned Devices。
 
@@ -48,6 +48,8 @@ Build Succeeded
 | IT-U10 | 通过 | 标记“有困难”后节点完成；结束后明确显示“训练记录已保存” |
 | IT-U11 | 通过 | 补齐 `WKCompanionAppBundleIdentifier` 后，iPhone 包成功安装并运行 |
 | IT-U12 | 通过 | Watch 未配对时仅产生 `WCSession is not paired` 提示，iPhone 全流程无崩溃 |
+| IT-U13 | 通过 | 训练地图显示带中文辅助功能标签的放大/缩小按钮；点击放大后比例尺由约 36 米变为约 15 米。代码同时明确启用双指缩放 |
+| IT-U14 | 通过 | 路线轨迹和节点共同生成带边距的初始 `MKMapRect`；模拟器进入训练页时节点位于有效视野内，空数据分支回退用户位置 |
 
 ## 测试期间发现并修复的问题
 
@@ -57,6 +59,7 @@ Build Succeeded
 | WatchConnectivity 字典跨 MainActor 导致 Swift 6 数据竞争编译错误 | 高 | 在非隔离回调中提取 Sendable 值后切换 MainActor；重新构建通过 |
 | Watch App 缺少 iPhone companion bundle identifier，导致模拟器安装失败 | 高 | 在工程配置加入 `com.panwenye.DrivingTrainer`；重新安装运行通过 |
 | Xcode/iOS/watchOS 开发组件缺失 | 环境 | 安装 Xcode 26.6、iOS 26.5 和 watchOS 26.5 组件；构建通过 |
+| `MapZoomStepper` 在 iOS 不可用 | 高 | 改为绑定 `MapCameraPosition` 的原生 SwiftUI 加减按钮；iPhone 目标重新编译成功并在模拟器确认比例尺变化 |
 
 ## 尚待真机执行
 
