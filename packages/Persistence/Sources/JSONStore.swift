@@ -20,8 +20,6 @@ public actor JSONStore<Value: Codable & Sendable> {
         self.encoder = JSONEncoder()
         self.decoder = JSONDecoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        encoder.dateEncodingStrategy = .iso8601
-        decoder.dateDecodingStrategy = .iso8601
     }
 
     public func load(default defaultValue: @autoclosure () -> Value) throws -> Value {
