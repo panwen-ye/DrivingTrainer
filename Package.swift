@@ -38,6 +38,11 @@ let package = Package(
             name: "DrivingTrainerPersistenceTests",
             dependencies: ["DrivingTrainerDomain", "DrivingTrainerPersistence"],
             path: "tests/unit/Persistence"
+        ),
+        .testTarget(
+            name: "DrivingTrainerIntegrationTests",
+            dependencies: ["DrivingTrainerDomain", "DrivingTrainerPersistence"],
+            path: "tests/integration"
         )
     ]
 )
