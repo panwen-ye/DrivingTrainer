@@ -26,7 +26,7 @@ final class WatchBridge: NSObject, ObservableObject {
     }
 }
 
-extension WatchBridge: @preconcurrency WCSessionDelegate {
+extension WatchBridge: WCSessionDelegate {
     func session(
         _ session: WCSession,
         activationDidCompleteWith activationState: WCSessionActivationState,
