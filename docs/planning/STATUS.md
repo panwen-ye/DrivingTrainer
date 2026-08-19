@@ -1,6 +1,6 @@
 # 开发状态
 
-更新时间：2026-08-18
+更新时间：2026-08-19
 
 ## 已完成
 
@@ -9,15 +9,20 @@
 - Codable JSON 原子化本地存储。
 - 模型与存储测试用例。
 - 生产模块通过 `swift build`。
+- Xcode 26.6、iOS 26.5 与 watchOS 26.5 开发环境完成。
+- iPhone + Apple Watch 工程构建成功，无编译错误或警告。
+- 21 项自动化测试全部通过，其中包含 3 项跨模块集成测试。
+- iPhone 17 模拟器完成清洁安装与录制、节点、训练、复盘闭环验收。
+- Personal Team 已绑定到工程，代码持续同步 GitHub `master`。
 
-## 当前环境阻塞
+## 当前待办
 
-本机未发现完整 Xcode，当前激活路径为 Command Line Tools。现有命令行 SDK 还缺少 XCTest，因此测试用例已创建但需安装完整 Xcode 后运行。iOS/watchOS App target、模拟器构建、签名和真机安装同样需要完整 Xcode。
+- 连接、解锁并信任用户 iPhone，完成自动签名与安装。
+- 在真机开启开发者模式并验证 GPS。
+- 在已配对 Apple Watch 上验证摘要与震动。
+- 按安全要求完成短距离实地测试。
 
-## 恢复后的下一步
+## 测试资料
 
-1. 安装 Xcode，并首次启动完成组件安装。
-2. 将开发者目录切换到 Xcode。
-3. 运行 `swift test` 验证现有 5 个测试。
-4. 创建 iOS/watchOS target 并接入本地 Package。
-5. 完成首个 iPhone 空壳安装，再继续路线列表界面。
+- [集成测试用例](../testing/INTEGRATION_TEST_PLAN.md)
+- [2026-08-19 集成测试报告](../testing/INTEGRATION_TEST_REPORT_2026-08-19.md)
