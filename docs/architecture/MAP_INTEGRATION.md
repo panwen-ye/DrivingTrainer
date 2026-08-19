@@ -46,6 +46,25 @@ iPhone GPS
 
 节点提醒不依赖地图画面上的道路或屏幕像素。`GeoDistance` 根据两个经纬度点计算球面距离，`ReminderEngine` 再将距离与节点提醒半径比较。即使用户缩放或拖动地图，提醒距离也不会改变。
 
+## 从 Apple 地图导入路线
+
+Apple 没有向普通第三方 App 开放读取地图 App 的最近路线、收藏路线或历史记录。当前实现采用 Apple 官方支持的共享地图 URL：用户在 Apple 地图路线页面复制分享链接，应用解析链接中的起点和终点，然后调用 `MKDirections` 获取 Apple 返回的驾驶路线。
+
+导入流程：
+
+```text
+Apple 地图共享链接
+  → 校验 maps.apple.com / maps.apple 域名
+  → 短链接跟随 Apple 301 跳转
+  → 解析 source/destination（兼容旧 saddr/daddr）
+  → 坐标直接生成 MKMapItem；地址交由 MKLocalSearch 解析
+  → MKDirections 请求 automobile 路线
+  → MKPolyline 提取经纬度并限制为最多约 2,000 个轨迹点
+  → 更新用户选中的考试路线，同时保留原考试节点
+```
+
+由于 `MKDirections` 会按请求时的 Apple 路况与道路数据重新计算路线，导入结果不保证与用户之前在 Apple 地图里查看过的某个备选方案逐点一致。导入后应在训练地图上核对，再补充考试节点。
+
 ## 验证清单
 
 - iPhone 目标使用 iOS 26.5 SDK 编译成功。
@@ -53,4 +72,3 @@ iPhone GPS
 - iPhone 17 模拟器中放大、缩小按钮均可访问。
 - 点击放大后地图比例尺从约 36 米变化为约 15 米。
 - 训练节点标记、当前位置按钮和 Apple 地图法律信息正常显示。
-
