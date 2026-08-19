@@ -19,6 +19,8 @@
 - [资源与应用清单](docs/setup/RESOURCES.md)
 - [分阶段开发计划](docs/planning/ROADMAP.md)
 - [当前开发状态](docs/planning/STATUS.md)
+- [需求与进度总览](docs/PROJECT_REQUIREMENTS_AND_PROGRESS.md)
+- [推送并安装到 iPhone 与 Apple Watch](docs/setup/IPHONE_WATCH_DEPLOYMENT.md)
 - [数据模型草案](docs/architecture/DATA_MODEL.md)
 - [决策记录](docs/decisions/0001-native-apple-stack.md)
 
@@ -60,7 +62,8 @@ DrivingTrainer/
 
 ## 当前验证状态
 
-- 纯 Swift 核心模块可通过命令行构建。
+- 23 项 Swift 自动化测试全部通过，其中包含 5 项跨模块集成测试。
 - Xcode 工程可由 `xcodegen generate` 稳定生成。
-- iPhone/watchOS 编译、签名和真机安装需等待本机 Xcode 完成 App Store 授权安装。
-- 三条同心考场路线先通过 App 实地录制，不依赖未经确认的网络路线数据。
+- iPhone 与嵌入 Watch App 已通过模拟器目标构建和安装。
+- Personal Team 已配置；真机安装等待连接、解锁并信任用户 iPhone。
+- 三条同心考场路线可实地录制，也可从 Apple 地图路线共享链接导入后人工校准。
