@@ -13,6 +13,8 @@ struct RecordingView: View {
     @State private var isSaving = false
     @State private var nodes: [RouteNode] = []
     @State private var editingNode: RouteNode?
+    @State private var announcements: [ExamAnnouncement] = []
+    @State private var editingAnnouncement: ExamAnnouncement?
     @State private var cameraPosition: MapCameraPosition = .userLocation(
         followsHeading: false,
         fallback: .automatic
@@ -33,8 +35,20 @@ struct RecordingView: View {
         .onAppear { recorder.requestAuthorization() }
         .sheet(item: $editingNode) { node in
             NodeEditorView(node: node) { updated in
-                guard let index = nodes.firstIndex(where: { $0.id == updated.id }) else { return }
-                nodes[index] = updated
+                if let index = nodes.firstIndex(where: { $0.id == updated.id }) {
+                    nodes[index] = updated
+                } else {
+                    nodes.append(updated)
+                }
+            }
+        }
+        .sheet(item: $editingAnnouncement) { announcement in
+            ExamAnnouncementEditorView(announcement: announcement) { updated in
+                if let index = announcements.firstIndex(where: { $0.id == updated.id }) {
+                    announcements[index] = updated
+                } else {
+                    announcements.append(updated)
+                }
             }
         }
     }
@@ -45,6 +59,26 @@ struct RecordingView: View {
             if coordinates.count >= 2 {
                 MapPolyline(coordinates: coordinates)
                     .stroke(.blue, lineWidth: 5)
+            }
+            ForEach(nodes) { node in
+                Marker(
+                    "\(node.order + 1)",
+                    coordinate: CLLocationCoordinate2D(
+                        latitude: node.coordinate.latitude,
+                        longitude: node.coordinate.longitude
+                    )
+                )
+            }
+            ForEach(announcements) { announcement in
+                Marker(
+                    "\(announcement.order + 1). \(announcement.project.displayName)",
+                    systemImage: "speaker.wave.2.fill",
+                    coordinate: CLLocationCoordinate2D(
+                        latitude: announcement.coordinate.latitude,
+                        longitude: announcement.coordinate.longitude
+                    )
+                )
+                .tint(.orange)
             }
         }
         .mapControls {
@@ -93,15 +127,21 @@ struct RecordingView: View {
                     HStack {
                         metric(title: "轨迹点", value: "\(recorder.track.count)")
                         Divider().frame(height: 30)
-                        metric(title: "节点", value: "\(nodes.count)")
+                        metric(title: "训练点", value: "\(nodes.count)")
+                        Divider().frame(height: 30)
+                        metric(title: "考核项", value: "\(announcements.count)")
                     }
                 }
             }
 
             if recorder.state != .idle {
-                Button("标记考试节点", systemImage: "mappin.and.ellipse") { addNode() }
-                    .buttonStyle(.bordered)
-                    .disabled(recorder.latestPoint == nil)
+                HStack {
+                    Button("标记训练点", systemImage: "mappin.and.ellipse") { addNode() }
+                        .buttonStyle(.bordered)
+                    Button("标记考核项目", systemImage: "speaker.wave.2") { addAnnouncement() }
+                        .buttonStyle(.bordered)
+                }
+                .disabled(recorder.latestPoint == nil)
             }
 
             switch recorder.state {
@@ -211,7 +251,8 @@ struct RecordingView: View {
             name: routeName,
             venue: "武汉同心考场",
             path: track,
-            nodes: nodes
+            nodes: nodes,
+            announcements: announcements
         )
         Task {
             await model.saveRoute(route)
@@ -248,8 +289,17 @@ struct RecordingView: View {
             type: .custom,
             instruction: "前方考试节点"
         )
-        nodes.append(node)
         editingNode = node
+    }
+
+    private func addAnnouncement() {
+        guard let point = recorder.latestPoint else { return }
+        let announcement = ExamAnnouncement(
+            coordinate: point.coordinate,
+            order: announcements.count,
+            project: .start
+        )
+        editingAnnouncement = announcement
     }
 
     private func zoomMap(by scale: Double) {
@@ -436,6 +486,51 @@ struct NodeEditorView: View {
                         dismiss()
                     }
                     .disabled(node.instruction.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
+            }
+        }
+    }
+}
+
+struct ExamAnnouncementEditorView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var announcement: ExamAnnouncement
+    let onSave: (ExamAnnouncement) -> Void
+
+    init(announcement: ExamAnnouncement, onSave: @escaping (ExamAnnouncement) -> Void) {
+        _announcement = State(initialValue: announcement)
+        self.onSave = onSave
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Picker("考核项目", selection: $announcement.project) {
+                    ForEach(ExamProjectType.allCases, id: \.self) { project in
+                        Text(project.displayName).tag(project)
+                    }
+                }
+
+                LabeledContent("实际播报", value: announcement.project.announcementText)
+
+                Stepper(value: $announcement.triggerRadiusMeters, in: 20...200, step: 10) {
+                    LabeledContent("触发距离", value: "\(Int(announcement.triggerRadiusMeters)) 米")
+                }
+
+                Text("考核播报点独立于训练提示点。模拟考试模式只朗读上面的考核内容，不播报训练口诀。")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+            .navigationTitle("考核播报点")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("取消") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("保存") {
+                        onSave(announcement)
+                        dismiss()
+                    }
                 }
             }
         }
