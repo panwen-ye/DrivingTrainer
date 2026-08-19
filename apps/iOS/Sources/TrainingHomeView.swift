@@ -118,7 +118,7 @@ private struct TrainingPreviewView: View {
             .padding()
             .background(.regularMaterial)
         }
-        .navigationTitle(controller.state == .active ? "训练中" : "训练准备")
+        .navigationTitle(navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
         .interactiveDismissDisabled(controller.state == .active || controller.state == .paused)
         .onAppear { recorder.requestAuthorization() }
@@ -141,18 +141,31 @@ private struct TrainingPreviewView: View {
                 .buttonStyle(.borderedProminent).controlSize(.large)
                 .disabled(route.nodes.isEmpty || !canLocate)
         case .active:
-            HStack {
-                Button("已完成", systemImage: "checkmark") { mark(.completed) }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(controller.currentNode == nil)
-                Button("有困难", systemImage: "exclamationmark.triangle") { mark(.difficult) }
-                    .buttonStyle(.bordered)
-                    .disabled(controller.currentNode == nil)
-                Button("结束", systemImage: "stop.fill") { finish() }
-                    .buttonStyle(.bordered)
+            VStack(spacing: 10) {
+                HStack {
+                    Button("已完成", systemImage: "checkmark") { mark(.completed) }
+                        .buttonStyle(.borderedProminent)
+                    Button("有困难", systemImage: "exclamationmark.triangle") { mark(.difficult) }
+                        .buttonStyle(.bordered)
+                    Button("跳过", systemImage: "forward.end") { mark(.skipped) }
+                        .buttonStyle(.bordered)
+                }
+                .disabled(controller.currentNode == nil)
+
+                HStack {
+                    Button("暂停", systemImage: "pause.fill") { pause() }
+                        .buttonStyle(.bordered)
+                    Button("结束训练", systemImage: "stop.fill") { finish() }
+                        .buttonStyle(.bordered)
+                }
             }
         case .paused:
-            Button("继续训练", systemImage: "play.fill") { resume() }.buttonStyle(.borderedProminent)
+            HStack {
+                Button("继续训练", systemImage: "play.fill") { resume() }
+                    .buttonStyle(.borderedProminent)
+                Button("结束训练", systemImage: "stop.fill") { finish() }
+                    .buttonStyle(.bordered)
+            }
         case .finished:
             Label("训练记录已保存", systemImage: "checkmark.circle.fill").foregroundStyle(.green)
         }
@@ -160,6 +173,14 @@ private struct TrainingPreviewView: View {
 
     private var canLocate: Bool {
         recorder.authorizationStatus == .authorizedWhenInUse || recorder.authorizationStatus == .authorizedAlways
+    }
+
+    private var navigationTitle: String {
+        switch controller.state {
+        case .active: "训练中"
+        case .paused: "训练已暂停"
+        case .idle, .finished: "训练准备"
+        }
     }
 
     private static func mapPosition(for route: Route) -> MapCameraPosition {
@@ -207,6 +228,13 @@ private struct TrainingPreviewView: View {
     private func resume() {
         try? controller.resume()
         recorder.resume()
+    }
+
+    private func pause() {
+        try? controller.pause()
+        recorder.pause()
+        speak("训练已暂停")
+        model.updateWatch(route: route.name, instruction: "训练已暂停")
     }
 
     private func mark(_ outcome: AttemptOutcome) {
