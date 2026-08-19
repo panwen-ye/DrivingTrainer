@@ -42,16 +42,16 @@ private final class WatchSessionBridge: NSObject, ObservableObject {
         WCSession.default.activate()
     }
 
-    private func apply(_ payload: [String: Any]) {
-        route = payload["route"] as? String ?? route
-        instruction = payload["instruction"] as? String ?? instruction
-        if payload["alert"] as? Bool == true {
+    private func apply(route: String?, instruction: String?, alert: Bool) {
+        self.route = route ?? self.route
+        self.instruction = instruction ?? self.instruction
+        if alert {
             WKInterfaceDevice.current().play(.notification)
         }
     }
 }
 
-extension WatchSessionBridge: @preconcurrency WCSessionDelegate {
+extension WatchSessionBridge: WCSessionDelegate {
     nonisolated func session(
         _ session: WCSession,
         activationDidCompleteWith activationState: WCSessionActivationState,
@@ -59,10 +59,16 @@ extension WatchSessionBridge: @preconcurrency WCSessionDelegate {
     ) {}
 
     nonisolated func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String: Any]) {
-        Task { @MainActor in self.apply(applicationContext) }
+        let route = applicationContext["route"] as? String
+        let instruction = applicationContext["instruction"] as? String
+        let alert = applicationContext["alert"] as? Bool ?? false
+        Task { @MainActor in self.apply(route: route, instruction: instruction, alert: alert) }
     }
 
     nonisolated func session(_ session: WCSession, didReceiveMessage message: [String: Any]) {
-        Task { @MainActor in self.apply(message) }
+        let route = message["route"] as? String
+        let instruction = message["instruction"] as? String
+        let alert = message["alert"] as? Bool ?? false
+        Task { @MainActor in self.apply(route: route, instruction: instruction, alert: alert) }
     }
 }
