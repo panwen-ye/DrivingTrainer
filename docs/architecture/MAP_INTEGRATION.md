@@ -43,6 +43,8 @@ iPhone GPS
 
 空路线没有可框选坐标时，初始相机回退到用户位置；用户随后仍可通过手势、加减按钮或定位按钮改变视野。
 
+路线详情地图通过 `MapReader` 把停车后的一次点击转换为 `CLLocationCoordinate2D`，并显示紫色选点标记。用户可基于该坐标打开训练提示或考核项目编辑器；只有确认保存后才写入 `Route.nodes` 或 `Route.announcements`。这使 Apple 地图导入的纯轨迹可以直接补充训练内容，不需要重新录制。
+
 ## 距离提醒与地图的关系
 
 训练提示与考核项目播报都不依赖地图画面上的道路或屏幕像素。`GeoDistance` 根据两个经纬度点计算球面距离，`ReminderEngine` 和独立的 `ExamAnnouncementEngine` 分别与各自半径比较。即使用户缩放或拖动地图，触发距离也不会改变；两套引擎互不推进状态。
@@ -69,7 +71,7 @@ Apple 地图共享链接
 ## 验证清单
 
 - iPhone 目标使用 iOS 26.5 SDK 编译成功。
-- 自动化 Domain、Persistence、Integration 测试 29 项全部通过。
+- 自动化 Domain、Persistence、Integration 测试 30 项全部通过。
 - iPhone 17 模拟器中放大、缩小按钮均可访问。
 - 点击放大后地图比例尺从约 36 米变化为约 15 米。
 - 缩放控件保持 42 点宽并位于右下角，不再横向遮挡地图。
