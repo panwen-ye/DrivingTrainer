@@ -8,9 +8,9 @@
 
 软件侧回归通过，可以进入 iPhone + Apple Watch 真机验收。
 
-- Swift 自动化测试：29 项通过，0 项失败。
-- 跨模块集成测试：6 项通过。
-- iPhone 与嵌入 Watch 工程：构建成功。
+- Swift 自动化测试：30 项通过，0 项失败。
+- 跨模块集成测试：7 项通过。
+- iPhone 与嵌入 Watch 工程：Debug 模拟器和无签名 Release 真机架构构建成功。
 - 模拟器新增界面检查：考核项目创建、模式切换、自动触发与进度推进通过。
 - 高优先级代码缺陷：0。
 - 真机、真实 GPS、真实 Watch、真实 Apple 地图武汉链接和外接鼠标：待设备验收。
@@ -22,20 +22,22 @@
 | IT-A01 | 通过 | 路线保存、重载、训练、提醒、结果和记录闭环通过 |
 | IT-A02 | 通过 | 同 ID 路线更新不重复 |
 | IT-A03 | 通过 | 训练记录重载后倒序 |
-| IT-A04 | 通过 | Domain、Persistence、Integration 共 29 项，0 失败 |
+| IT-A04 | 通过 | Domain、Persistence、Integration 共 30 项，0 失败 |
 | IT-A05 | 通过 | `DrivingTrainerApp` 指定 iPhone 17 模拟器构建成功，Watch target 一并构建并嵌入；两 target 使用独立产物名 |
 | IT-A06 | 通过 | 暂停点被忽略；恢复后跳过/完成结果及备注持久化 |
 | IT-A07 | 通过 | 导入轨迹更新后节点保持不变、版本递增 |
 | IT-A08 | 通过 | 两个考核播报点严格按顺序触发，触发后索引自动推进 |
 | IT-A09 | 通过 | 范围外、80 米低精度和 5 秒最小间隔均能阻止错误播报 |
 | IT-A10 | 通过 | 旧路线缺少 announcements 时解码为空；训练口诀和考核文本分别持久化 |
+| IT-A11 | 通过 | 导入轨迹后追加同坐标训练点和考核点，重载后轨迹、坐标、顺序、内容和版本一致 |
 
 自动化摘要：
 
 ```text
-Executed 29 tests, with 0 failures
-TrainingWorkflowIntegrationTests: Executed 6 tests, with 0 failures
-BUILD SUCCEEDED
+Executed 30 tests, with 0 failures
+TrainingWorkflowIntegrationTests: Executed 7 tests, with 0 failures
+Debug simulator BUILD SUCCEEDED
+Unsigned Release device BUILD SUCCEEDED
 ```
 
 ## 本轮补齐功能验证
@@ -54,6 +56,7 @@ BUILD SUCCEEDED
 | 录制/编辑考核点 | 通过（模拟器/构建） | 实际创建独立考核项目，编辑器显示预设口令和 80 米半径，地图显示橙色扬声器标记，保存后路线计数为 1 |
 | 模式空数据保护 | 通过（模拟器） | 无训练点时训练提示模式禁止开始；有考核点后切换模拟考试模式即可开始 |
 | 取消新增不残留 | 通过（代码/构建） | 新对象仅在编辑器“保存”回调中追加；取消不再写入默认“起步”项目 |
+| 导入后地图选点补内容 | 通过（自动化/Debug/Release 构建），待解锁补 UI 点击 | `MapReader` 将点击位置转换为经纬度；紫色标记确认选点；两类编辑器仅保存时追加；数据重载集成测试通过。最新包已安装模拟器，但本轮界面控制时 Mac 处于锁屏状态 |
 
 ## 待真机验收
 
