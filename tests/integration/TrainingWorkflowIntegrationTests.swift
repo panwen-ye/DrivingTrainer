@@ -249,6 +249,57 @@ final class TrainingWorkflowIntegrationTests: XCTestCase {
         XCTAssertNotEqual(event?.announcement.project.announcementText, reloaded.nodes.first?.instruction)
     }
 
+    func testImportedRouteCanPersistMapSelectedTrainingAndExamPoints() async throws {
+        let directory = temporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = try DrivingDataStore(directory: directory)
+        let selectedCoordinate = Coordinate(latitude: 30.625, longitude: 114.325)
+        var route = Route(
+            name: "导入后补点测试",
+            venue: "武汉同心考场",
+            path: [
+                TrackPoint(
+                    coordinate: Coordinate(latitude: 30.62, longitude: 114.32),
+                    horizontalAccuracy: 0
+                ),
+                TrackPoint(
+                    coordinate: Coordinate(latitude: 30.63, longitude: 114.33),
+                    horizontalAccuracy: 0
+                )
+            ]
+        )
+        try await store.upsertRoute(route)
+
+        route.nodes.append(
+            RouteNode(
+                coordinate: selectedCoordinate,
+                order: route.nodes.count,
+                type: .school,
+                instruction: "学校区域减速观察"
+            )
+        )
+        route.announcements.append(
+            ExamAnnouncement(
+                coordinate: selectedCoordinate,
+                order: route.announcements.count,
+                project: .schoolZone
+            )
+        )
+        route.version += 1
+        try await store.upsertRoute(route)
+
+        let routes = try await store.routes()
+        let reloaded = try XCTUnwrap(routes.first)
+        XCTAssertEqual(reloaded.path.count, 2)
+        XCTAssertEqual(reloaded.nodes.first?.coordinate, selectedCoordinate)
+        XCTAssertEqual(reloaded.nodes.first?.order, 0)
+        XCTAssertEqual(reloaded.nodes.first?.instruction, "学校区域减速观察")
+        XCTAssertEqual(reloaded.announcements.first?.coordinate, selectedCoordinate)
+        XCTAssertEqual(reloaded.announcements.first?.order, 0)
+        XCTAssertEqual(reloaded.announcements.first?.project, .schoolZone)
+        XCTAssertEqual(reloaded.version, 2)
+    }
+
     private func temporaryDirectory() -> URL {
         FileManager.default.temporaryDirectory
             .appendingPathComponent("DrivingTrainerIntegration-\(UUID().uuidString)", isDirectory: true)
